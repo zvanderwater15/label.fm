@@ -1,14 +1,20 @@
 import {useState} from "react"
 
-function SearchUser() {
+function SearchUser({search}) {
   const [username, setUsername] = useState("")
-  const getUser = () => alert(username)
+
+  // get top tracks for user
+  const submit = (e) => {
+    e.preventDefault()
+    search(username)
+  }
+  
   return (
     <div>
         <p>
           Enter your last.fm username.
         </p>
-        <form onSubmit={getUser}>
+        <form onSubmit={submit}>
           <input value={username} onChange={(e) => setUsername(e.target.value)}/>
           <button>Submit</button>
         </form>
