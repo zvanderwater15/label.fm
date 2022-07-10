@@ -14,7 +14,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Get Labelled</h1>
-        <p>Enter your last.fm username:</p>
+        <p>Enter a last.fm username:</p>
         <SearchUser search={setUsername}/>
         <ProducerList username={username}/>
       </header>

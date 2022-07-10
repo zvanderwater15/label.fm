@@ -38,10 +38,15 @@ labels [
 */
 app.get("/api/:username/producers", async (req, res) => {
   const cluster = await connectToCluster();
-  const db = await openDb(cluster)
+  const db = await openDb(cluster);
 
   // get a user's top albums from last.fm
-  const topAlbums = await getTopAlbums(req.params.username)
+  let topAlbums;
+  try {
+    topAlbums = await getTopAlbums(req.params.username);
+  } catch (e) {
+    return res.status(404).statusMessage("User not found");
+  }
 
   // build a dictionary of record labels from the given albums
   const labels = {}
