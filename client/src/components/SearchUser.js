@@ -11,11 +11,9 @@ function SearchUser({search}) {
   
   return (
     <div>
-        <p>
-          Enter your last.fm username.
-        </p>
         <form onSubmit={submit}>
           <input value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <br />
           <button>Submit</button>
         </form>
     </div>

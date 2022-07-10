@@ -13,8 +13,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Production Moment</h1>
-        <p>Analyze your top tracks to find your favorite producers.</p>
+        <h1>Get Labelled</h1>
+        <p>Enter your last.fm username:</p>
         <SearchUser search={setUsername}/>
         <ProducerList username={username}/>
       </header>

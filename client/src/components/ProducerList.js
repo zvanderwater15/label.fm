@@ -6,10 +6,10 @@ import {
 
 function ProducerList({username}) {
     // get musicbrainz producer list from tracks
-  const { isLoading, error, data } = useQuery(['userTracks', username], () =>
-    fetch(`/api/${username}/tracks`).then(res =>
+  const { isLoading, error, data } = useQuery(['favoriteProducers', username], () =>
+    fetch(`/api/${username}/producers`).then(res =>
       res.json()
-    ), {enabled: !!username}
+    ), {enabled: !!username, refetchOnWindowFocus: false }
   )
   
   if (error) {
@@ -26,8 +26,8 @@ function ProducerList({username}) {
       <div>
         <ol>
         {
-          data.tracks.map(track =>          
-             <Producer name={track.name}/>
+          data.labels.map(label =>          
+             <Label name={label.name} albumCount={label.albums.length}/>
         )}
         </ol>
       </div>
@@ -36,10 +36,10 @@ function ProducerList({username}) {
   
   }
   
-  function Producer({name}) {
+  function Label({name, albumCount}) {
     return (
       <li key={name}>
-          <p>{name}</p>
+          <p>{name} ({albumCount})</p>
       </li>
     );
   }
