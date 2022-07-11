@@ -3,8 +3,6 @@ import SearchUser from './components/SearchUser'
 import ProducerList from './components/ProducerList'
 import { useState } from 'react';
 
-// title
-// enter name
 
 
 function App() {
@@ -13,8 +11,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Get Labelled</h1>
-        <p>Enter a last.fm username:</p>
+        <h1>Label.fm</h1>
+        <p>Find your favorite record labels based on your top 50 albums in last.fm.</p>
         <SearchUser search={setUsername}/>
         <ProducerList username={username}/>
       </header>

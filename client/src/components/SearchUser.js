@@ -13,8 +13,7 @@ function SearchUser({search}) {
     <div>
         <form onSubmit={submit}>
           <input value={username} onChange={(e) => setUsername(e.target.value)}/>
-          <br />
-          <button>Submit</button>
+          <button placeholder="last.fm username" disabled={!username}>Submit</button>
         </form>
     </div>
   );
