@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export async function getLabels(mbid) {
   const release = await getRelease(mbid)
   if (!release['label-info']) return []
-  const labels = release['label-info'].map(labelInfo => labelInfo['label']['name'])
+  const labels = release['label-info'].filter(labelInfo => labelInfo['label']).map(labelInfo => labelInfo['label']['name'])
   return labels
 }
 
