@@ -25,7 +25,7 @@ function ProducerList({ username }) {
   if (error) {
     return <p>{error.message}</p>;
   } else if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>Loading... (can take up to two minutes)</p>;
   } else if (!username) {
     return null;
   } else {

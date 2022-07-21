@@ -7,6 +7,7 @@ import { getTopAlbums } from "./lib/lastfm.js";
 import { insertAlbum, getAlbum } from "./db/records.js";
 import { getLabels } from "./lib/musicbrainz.js";
 import { connectToCluster, openDb, closeConnection } from "./db/conn.js";
+import amqp from 'amqplib/callback_api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -79,6 +80,39 @@ app.get("/api/:username/producers", async (req, res) => {
   const sortedLabels = Object.values(labels).sort((a, b) => a["albums"].length < b["albums"].length ? 1 : -1);
   await closeConnection(cluster);
   res.json({"labels": sortedLabels});
+});
+
+app.get("/api/send", async (req, res) => {
+  amqp.connect(process.env.AMQP_URL, function(error0, connection) {
+      if (error0) {
+          throw error0;
+      }
+      connection.createChannel(function(error1, channel) {
+          if (error1) {
+              throw error1;
+          }
+
+          var queue = 'hello';
+          var msg = 'Hello World!';
+
+          channel.assertQueue(queue, {
+              durable: false
+          });
+          channel.sendToQueue(queue, Buffer.from(msg));
+
+          res.send("sent " + msg);
+      });
+      setTimeout(function() {
+          connection.close();
+          process.exit(0);
+      }, 500);
+});
+
+  // check status -> if completed recently return result
+  // check status -> if running return still running
+  // if no status then send to queue
+  // send to queue
+  // return Accepted
 });
 
 // All other GET requests not handled before will return our React app
