@@ -1,5 +1,8 @@
 # Label.fm
 
+Work in Progress!
+
+
 - Takes a last.fm username and displays the top record labels that user listens to.
 
 - Consumes to the last.fm API for user listening history and musicbrainz API for album information.
