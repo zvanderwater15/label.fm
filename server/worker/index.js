@@ -1,31 +1,26 @@
 // receive
-import 'dotenv/config'
-import amqp from 'amqplib/callback_api.js';
+import "dotenv/config";
+import { receiveMessage } from "../lib/queues.js"
+import { updateJob, SUCCESS, FAILURE, insertAlbum } from "../lib/db/records.js";
+import { getLabels } from "../lib/musicbrainz.js";
 
-amqp.connect(process.env.AMQP_URL, function(error0, connection) {
-    if (error0) {
-        throw error0;
-    }
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
+const saveRecordLabelInformation = async (msg) => {
+  console.log("receiving message", msg.content.toString())
 
-        var queue = 'hello';
+  // const payload = JSON.parse(msg.content.toString());
+  // console.log("json", payload)
+  // // db connection
+  // for (let mbid of payload.mbids) {
+  //   const labels = await getLabels(mbid);
+  //   console.log("inserting", mbid, labels)
+  //   // await insertAlbum(db, mbid, artist, title, labels)
+  //   // get info from musicbrainz
+  //   // save
+  // }
+  // // connection close
+  // await updateJob(message.job, SUCCESS)
+}
 
-        channel.assertQueue(queue, {
-            durable: false
-        });
+const listen = () => receiveMessage(saveRecordLabelInformation);
 
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-
-        channel.consume(queue, function(msg) {
-            console.log(" [x] Received %s", msg.content.toString());
-            // calculate
-            // write to db
-        }, {
-            noAck: true
-        });
-    });
-});
-
+export default listen();

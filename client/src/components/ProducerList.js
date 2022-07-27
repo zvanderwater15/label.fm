@@ -7,7 +7,7 @@ function ProducerList({ username }) {
   const { isLoading, error, data } = useQuery(
     ["favoriteProducers", username],
     () =>
-      fetch(`/api/${username}/producers`).then(
+      fetch(`/api/labels/${username}/`).then(
         (res) => {
           if (res.status === NOT_FOUND) {
             throw new Error("User not found");
