@@ -1,6 +1,8 @@
 
 import express from "express";
 import { getJob } from "../lib/db/records.js";
+import { connectToCluster, openDb, closeConnection } from "../lib/db/conn.js";
+
 const router = express.Router()
 
 router.get("/:jobId", async (req, res) => {

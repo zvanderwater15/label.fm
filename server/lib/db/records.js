@@ -35,7 +35,7 @@ export async function updateJob(db, jobID, status) {
   if (status != PENDING && status != SUCCESS && status != FAILURE) {
     throw Error(`Invalid job status: ${status}`)
   }
-  const album = await db.collection(JOBS).update({jobID: jobID}, {status: status});
+  const album = await db.collection(JOBS).updateOne({jobID: jobID}, {$set: {status: status}});
   return album;
 }
 

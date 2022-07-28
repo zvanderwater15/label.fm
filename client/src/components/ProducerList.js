@@ -1,16 +1,20 @@
 import { useQuery } from "react-query";
-import BarChart from './BarChart'
+import BarChart from "./BarChart";
 
 const NOT_FOUND = 404;
+const ACCEPTED = 202;
 function ProducerList({ username }) {
   // get musicbrainz producer list from tracks
   const { isLoading, error, data } = useQuery(
-    ["favoriteProducers", username],
+    ["labels", username],
     () =>
       fetch(`/api/labels/${username}/`).then(
         (res) => {
           if (res.status === NOT_FOUND) {
             throw new Error("User not found");
+          } else if (res.status === ACCEPTED) {
+            throw new Error("Loading... this may take a few minutes...")
+            // then start querying
           } else if (!res.ok) {
             throw new Error("Unknown error");
           } else {
@@ -22,15 +26,41 @@ function ProducerList({ username }) {
     { enabled: !!username, retry: false, refetchOnWindowFocus: false }
   );
 
+  // const { jobLoading, jobError, jobData } = useQuery(
+  //   ["longRunningJob", username],
+  //   () =>
+  //     fetch(`/api/labels/${username}/`).then(
+  //       (res) => {
+  //         if (res.status === NOT_FOUND) {
+  //           throw new Error("User not found");
+  //         } else if (res.status === ACCEPTED) {
+  //           throw new Error("Loading... this may take a few minutes...")
+  //           // then start querying
+  //         } else if (!res.ok) {
+  //           throw new Error("Unknown error");
+  //         } else {
+  //           return res.json();
+  //         }
+  //       }
+  //       // only run once a username has been entered
+  //     ),
+  //   { enabled: !!username, retry: false, refetchOnWindowFocus: false }
+  // );
+
   if (error) {
     return <p>{error.message}</p>;
   } else if (isLoading) {
-    return <p>Loading... (can take up to two minutes)</p>;
+    return <p>Loading...</p>;
   } else if (!username) {
     return null;
   } else {
     return (
-      <BarChart chartData = {data.labels.map((label) => ({y: label.name,  x: label.albums.length}))} />
+      <BarChart
+        chartData={data.labels.map((label) => ({
+          y: label.name,
+          x: label.albums.length,
+        }))}
+      />
     );
   }
 }

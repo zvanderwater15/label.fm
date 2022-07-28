@@ -27,7 +27,7 @@ export async function receiveMessage(callback) {
       );
 
       channel.consume(process.env.QUEUE_NAME, callback, {
-        noAck: false,
+        noAck: true,
       });
     })
   );
