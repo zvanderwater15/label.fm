@@ -15,7 +15,7 @@ const saveRecordLabelInformation = async (msg) => {
   for (let album of albums) {
     const labels = await getLabels(album.mbid);
     await insertAlbum(db, album.mbid, album.artist, album.title, labels)
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1100)); //musicbrainz api limits calls to one per second
   }
 
   await updateJob(db, jobID, SUCCESS)

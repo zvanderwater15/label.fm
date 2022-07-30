@@ -1,62 +1,86 @@
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import axios from "axios";
 import BarChart from "./BarChart";
 
 const NOT_FOUND = 404;
 const ACCEPTED = 202;
-function ProducerList({ username }) {
-  // get musicbrainz producer list from tracks
-  const { isLoading, error, data } = useQuery(
+const READY = "success";
+const PENDING = "pending";
+const FAILURE = "failure";
+
+// if the job will take too long, returns 202 Accepted and an href to check on the job
+function useLabels(username, enabled) {
+  return useQuery(
     ["labels", username],
-    () =>
-      fetch(`/api/labels/${username}/`).then(
-        (res) => {
-          if (res.status === NOT_FOUND) {
-            throw new Error("User not found");
-          } else if (res.status === ACCEPTED) {
-            throw new Error("Loading... this may take a few minutes...")
-            // then start querying
-          } else if (!res.ok) {
-            throw new Error("Unknown error");
-          } else {
-            return res.json();
-          }
-        }
-        // only run once a username has been entered
-      ),
-    { enabled: !!username, retry: false, refetchOnWindowFocus: false }
+    async () => {
+      const res = await axios.get(`/api/labels/${username}/`);
+      return {status: res.status, labels: res.data.labels, href: res.data.href}
+    },
+    {
+      enabled: enabled,
+      retry: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+}
+
+// returns a status as "success", "pending", or "failure" for the given job
+function useJobStatus(href, enabled, retry) {
+  const intervalMs = 1000;
+  return useQuery(
+    ["longRunningJob", href],
+    () => axios(href).then(res => res.data),
+    {
+      enabled: enabled,
+      retry: retry,
+      refetchOnWindowFocus: false,
+      refetchInterval: intervalMs,
+    }
+  );
+}
+
+function ProducerList({ username }) {
+  const queryClient = useQueryClient()
+
+  const [href, setHref] = useState(null);
+  const [jobStatus, setJobStatus] = useState(READY);
+
+  // get musicbrainz producer list from tracks
+  const labelQuery = useLabels(username, !!username && jobStatus === READY);
+  const jobStatusQuery = useJobStatus(
+    href,
+    !!href && labelQuery.isFetched && labelQuery.data.status === ACCEPTED,
+    jobStatus === PENDING
   );
 
-  // const { jobLoading, jobError, jobData } = useQuery(
-  //   ["longRunningJob", username],
-  //   () =>
-  //     fetch(`/api/labels/${username}/`).then(
-  //       (res) => {
-  //         if (res.status === NOT_FOUND) {
-  //           throw new Error("User not found");
-  //         } else if (res.status === ACCEPTED) {
-  //           throw new Error("Loading... this may take a few minutes...")
-  //           // then start querying
-  //         } else if (!res.ok) {
-  //           throw new Error("Unknown error");
-  //         } else {
-  //           return res.json();
-  //         }
-  //       }
-  //       // only run once a username has been entered
-  //     ),
-  //   { enabled: !!username, retry: false, refetchOnWindowFocus: false }
-  // );
+  useEffect(() => {
+    if (labelQuery.isSuccess && labelQuery.data.status === ACCEPTED) {
+      setHref(labelQuery.data.href);
+    }
+  }, [labelQuery, setHref]);
 
-  if (error) {
-    return <p>{error.message}</p>;
-  } else if (isLoading) {
-    return <p>Loading...</p>;
-  } else if (!username) {
+  useEffect(() => {
+    if (jobStatusQuery.isSuccess && jobStatusQuery.data.status === READY) {
+      setJobStatus(READY);
+      queryClient.invalidateQueries(['labels']);
+    }
+  }, [jobStatusQuery, setJobStatus, queryClient]);
+
+  if (labelQuery.isIdle && jobStatusQuery.isIdle) {
     return null;
+  } else if (labelQuery.error) {
+    return <p>{labelQuery.error.message}</p>;
+  } else if (jobStatus === FAILURE) {
+    return <p>Unknown Error</p>;
+  } else if (labelQuery.isLoading) {
+    return <p>Loading...</p>;
+  } else if (labelQuery.data.status === ACCEPTED || jobStatusQuery.isLoading) {
+    return <p>This may take a few minutes...</p>;
   } else {
     return (
       <BarChart
-        chartData={data.labels.map((label) => ({
+        chartData={labelQuery.data.labels.map((label) => ({
           y: label.name,
           x: label.albums.length,
         }))}
