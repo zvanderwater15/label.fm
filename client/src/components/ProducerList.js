@@ -27,7 +27,7 @@ function useLabels(username, enabled) {
 
 // returns a status as "success", "pending", or "failure" for the given job
 function useJobStatus(href, enabled, retry) {
-  const intervalMs = 1000;
+  const intervalMs = 5000;
   return useQuery(
     ["longRunningJob", href],
     () => axios(href).then(res => res.data),
