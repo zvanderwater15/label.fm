@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 
 export async function sendMessage(msg) {
-  amqp.connect(process.env.AMQP_URL).then((connection) => {
+  amqp.connect(process.env.CLOUDAMQP_URL).then((connection) => {
     connection.createChannel().then((channel) => {
       channel.assertQueue(process.env.QUEUE_NAME, {
         durable: false,
@@ -16,7 +16,7 @@ export async function sendMessage(msg) {
 }
 
 export async function receiveMessage(callback) {
-  return amqp.connect(process.env.AMQP_URL).then((connection) =>
+  return amqp.connect(process.env.CLOUDAMQP_URL).then((connection) =>
     connection.createChannel().then((channel) => {
       channel.assertQueue(process.env.QUEUE_NAME, {
         durable: false,
