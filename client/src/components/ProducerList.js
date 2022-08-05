@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import BarChart from "./BarChart";
 
@@ -67,7 +67,7 @@ function ProducerList({ username }) {
     }
   }, [jobStatusQuery, setJobStatus, queryClient]);
 
-  if (labelQuery.isIdle && jobStatusQuery.isIdle) {
+  if (!labelQuery.isFetching && jobStatus === PENDING) {
     return null;
   } else if (labelQuery.error) {
     return <p>{labelQuery.error.message}</p>;
@@ -75,7 +75,7 @@ function ProducerList({ username }) {
     return <p>Unknown Error</p>;
   } else if (labelQuery.isLoading) {
     return <p>Loading...</p>;
-  } else if (labelQuery.data.status === ACCEPTED || jobStatusQuery.isLoading) {
+  } else if (labelQuery.data.status === ACCEPTED || jobStatusQuery === PENDING) {
     return <p>This may take a few minutes...</p>;
   } else {
     return (
