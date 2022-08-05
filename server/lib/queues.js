@@ -21,14 +21,22 @@ export async function receiveMessage(callback) {
       channel.assertQueue(process.env.QUEUE_NAME, {
         durable: false,
       });
+      channel.prefetch(1);
       console.log(
         " [*] Waiting for messages in %s. To exit press CTRL+C",
         process.env.QUEUE_NAME
       );
 
-      channel.consume(process.env.QUEUE_NAME, callback, {
-        noAck: true,
-      });
+      channel.consume(
+        process.env.QUEUE_NAME,
+        async (message) => {
+          await callback(message);
+          channel.ack(message);
+        },
+        {
+          noAck: false,
+        }
+      );
     })
   );
 }
