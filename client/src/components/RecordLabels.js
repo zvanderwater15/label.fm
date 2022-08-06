@@ -40,13 +40,12 @@ function useJobStatus(href, enabled, retry) {
   );
 }
 
-function ProducerList({ username }) {
+function RecordLabels({ username }) {
   const queryClient = useQueryClient()
 
   const [href, setHref] = useState(null);
   const [jobStatus, setJobStatus] = useState(READY);
 
-  // get musicbrainz producer list from tracks
   const labelQuery = useLabels(username, !!username && jobStatus === READY);
   const jobStatusQuery = useJobStatus(
     href,
@@ -66,8 +65,11 @@ function ProducerList({ username }) {
       queryClient.invalidateQueries(['labels']);
     }
   }, [jobStatusQuery, setJobStatus, queryClient]);
+  console.log(labelQuery.isFetching, jobStatus)
 
-  if (!labelQuery.isFetching && jobStatus === PENDING) {
+  if (labelQuery.isFetching) {
+    return <p>Loading...</p>;
+  } else if (!username) {
     return null;
   } else if (labelQuery.error) {
     return <p>{labelQuery.error.message}</p>;
@@ -89,4 +91,4 @@ function ProducerList({ username }) {
   }
 }
 
-export default ProducerList;
+export default RecordLabels;
