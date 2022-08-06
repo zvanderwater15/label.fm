@@ -9,11 +9,11 @@ export async function getLabels(mbid) {
 
 export async function getRelease(mbid) {
   const backoff = 1000;
-  let retry = true;
-  while (retry) {
-    retry = false;
+  let retry = false;
+  let res;
+  while (!res || retry) {
     const url = `https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`
-    const res = await fetch(url, {
+    res = await fetch(url, {
       headers: {
         'Accept': 'application/json'
       }
@@ -23,7 +23,9 @@ export async function getRelease(mbid) {
       retry = true;
       await Promise(() => setTimeout(backoff))
       backoff *= 2;
-    }  
+    }  else {
+      retry = false;
+    }
   }
   const releaseRes = await res.json();
   console.log("release response", releaseRes);
