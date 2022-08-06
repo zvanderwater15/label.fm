@@ -5,13 +5,13 @@ import { getFriends, getTopAlbums } from "../lib/lastfm.js";
 import { sendMessage } from "../lib/queues.js";
 import { v4 as uuidv4 } from 'uuid';
 
-async function lastfmUsers(db, startingUser, limit = 10) {
+async function lastfmUsers(db, startingUser, limit = 1000) {
   const visitedUsers = [];
   const visitedMBIDs = [];
   const users = [startingUser];
   console.log("starting limit", limit)
   while (users.length > 0 && visitedMBIDs.length <= limit) {
-    const user = users.pop();
+    const user = users.shift();
     console.log("processing user " + user);
 
     let friends = await getUserFriends(db, user);
