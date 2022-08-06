@@ -6,16 +6,17 @@ import { updateJob, SUCCESS, FAILURE, insertAlbum } from "../lib/db/records.js";
 import { getLabels } from "../lib/musicbrainz.js";
 
 const saveRecordLabelInformation = async (msg) => {
-  console.log("receiving message", msg.content.toString())
+
   const cluster = await connectToCluster();
   const db = await openDb(cluster);
 
   const {jobID, albums}= JSON.parse(msg.content.toString());
 
   for (let album of albums) {
+    console.log("processing " + album.title + " - " + album.mbid)
     const labels = await getLabels(album.mbid);
     await insertAlbum(db, album.mbid, album.artist, album.title, labels)
-    await new Promise(r => setTimeout(r, 1100)); //musicbrainz api limits calls to one per second
+    await new Promise(r => setTimeout(r, 1500)); //musicbrainz api limits calls to one per second
   }
 
   await updateJob(db, jobID, SUCCESS)

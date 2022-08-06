@@ -1,5 +1,5 @@
 import express from "express";
-import { startJob, getAlbum } from "../lib/db/records.js";
+import { startJob, getAlbum, getUserAlbums } from "../lib/db/records.js";
 import { getTopAlbums } from "../lib/lastfm.js";
 import { sendMessage } from "../lib/queues.js";
 import { connectToCluster, openDb, closeConnection } from "../lib/db/conn.js";
@@ -21,10 +21,13 @@ router.get("/:username", async (req, res) => {
   
     // get a user's top albums from last.fm
     let topAlbums;
-    try {
-      topAlbums = await getTopAlbums(req.params.username);
-    } catch (e) {
-      return res.status(404).send("User not found");
+    topAlbums = await getUserAlbums(db, req.params.username)
+    if (!topAlbums) {
+      try {
+        topAlbums = await getTopAlbums(req.params.username);
+      } catch (e) {
+        return res.status(404).send("User not found");
+      }  
     }
   
     // build a dictionary of record labels from the given albums
