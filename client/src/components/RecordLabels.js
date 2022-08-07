@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, createRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ScreenshotButton from './ScreenshotButton';
 import axios from "axios";
 import BarChart from "./BarChart";
 
@@ -42,6 +43,7 @@ function useJobStatus(href, enabled, retry) {
 
 function RecordLabels({ username }) {
   const queryClient = useQueryClient()
+  const ref = createRef(null);
 
   const [href, setHref] = useState(null);
   const [jobStatus, setJobStatus] = useState(READY);
@@ -65,8 +67,7 @@ function RecordLabels({ username }) {
       queryClient.invalidateQueries(['labels']);
     }
   }, [jobStatusQuery, setJobStatus, queryClient]);
-  console.log(labelQuery.isFetching, jobStatus)
-
+  
   if (labelQuery.isFetching) {
     return <p>Loading...</p>;
   } else if (!username) {
@@ -81,12 +82,17 @@ function RecordLabels({ username }) {
     return <p>This may take a few minutes...</p>;
   } else {
     return (
-      <BarChart
-        chartData={labelQuery.data.labels.map((label) => ({
-          y: label.name,
-          x: label.albums.length,
-        }))}
-      />
+      <div className="full-width">
+        <ScreenshotButton scrnRef={ref}/>
+        <div className="full-width" ref={ref}>
+          <BarChart
+            chartData={labelQuery.data.labels.map((label) => ({
+              y: label.name,
+              x: label.albums.length,
+            }))}
+          />
+        </div>
+      </div>
     );
   }
 }

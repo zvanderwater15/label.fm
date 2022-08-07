@@ -41,3 +41,7 @@ input {
   margin-right: 2em;
   margin-bottom: 20px;
 }
+
+.full-width {
+  width: 100%;
+}
