@@ -21,9 +21,28 @@ function BarChart({ chartData }) {
         type: "bar",
         data: data,
         options: {
-            maintainAspectRatio: false,
-            responsive: true,            
+          maintainAspectRatio: false,
+          responsive: true,
           indexAxis: "y",
+          scales: {
+            x: {
+              type: 'linear',
+              title: {
+                display: true,
+                text: '# of Albums',
+              },
+              position: 'top',
+              ticks: {
+                precision: 0
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Record Labels',
+              },
+            }
+          },                    
           plugins: {
             legend: {
               display: false,
@@ -36,8 +55,8 @@ function BarChart({ chartData }) {
   }, [chart, chartData]);
 
   return (
-    <div style={{ width: "100%", height: chartData.length + "em"  }}>
-      <canvas style={{ width: "100%"}} id="myChart"></canvas>
+    <div style={{ width: "100%", height: chartData.length + "em" }}>
+      <canvas style={{ width: "100%" }} id="myChart"></canvas>
     </div>
   );
 }
