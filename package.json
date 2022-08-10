@@ -2,7 +2,7 @@
   "name": "nextjs-blog",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/index.js",
   "dependencies": {
     "amqplib": "^0.10.0",
     "concurrently": "^7.1.0",
