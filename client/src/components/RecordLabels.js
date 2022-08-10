@@ -62,11 +62,11 @@ function RecordLabels({ username }) {
   }, [labelQuery, setHref]);
 
   useEffect(() => {
-    if (jobStatusQuery.isSuccess && jobStatusQuery.data.status === READY) {
+    if (labelQuery.data && labelQuery.data.status === ACCEPTED && jobStatusQuery.data && jobStatusQuery.data.status === READY ) {
       setJobStatus(READY);
       queryClient.invalidateQueries(['labels']);
     }
-  }, [jobStatusQuery, setJobStatus, queryClient]);
+  }, [jobStatusQuery.data, labelQuery.data, setJobStatus, queryClient]);
   
   if (labelQuery.isFetching) {
     return <p>Loading...</p>;
@@ -76,8 +76,6 @@ function RecordLabels({ username }) {
     return <p>{labelQuery.error.message}</p>;
   } else if (jobStatus === FAILURE) {
     return <p>Unknown Error</p>;
-  } else if (labelQuery.isLoading) {
-    return <p>Loading...</p>;
   } else if (labelQuery.data.status === ACCEPTED || jobStatusQuery === PENDING) {
     return <p>This may take a few minutes...</p>;
   } else {
@@ -89,7 +87,8 @@ function RecordLabels({ username }) {
             chartData={labelQuery.data.labels.map((label) => ({
               y: label.name,
               x: label.albums.length,
-            }))}
+              albums: label.albums
+            })).slice(0, 20)}
           />
         </div>
       </div>
