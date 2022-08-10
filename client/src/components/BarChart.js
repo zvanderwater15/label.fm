@@ -26,26 +26,33 @@ function BarChart({ chartData }) {
           indexAxis: "y",
           scales: {
             x: {
-              type: 'linear',
+              type: "linear",
               title: {
                 display: true,
-                text: '# of Albums',
+                text: "# of Albums",
               },
-              position: 'top',
+              position: "top",
               ticks: {
-                precision: 0
-              }
+                precision: 0,
+              },
             },
             y: {
               title: {
                 display: true,
-                text: 'Record Labels',
+                text: "Record Labels",
               },
-            }
-          },                    
+            },
+          },
           plugins: {
             legend: {
               display: false,
+            },
+            tooltip: {
+              callbacks: {
+                afterBody: function (context) {
+                  return context[0].raw.albums.map((album) => `${album.artist} - ${album.name}`)
+                }
+              },
             },
           },
         },
