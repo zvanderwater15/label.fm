@@ -36,10 +36,9 @@ router.get("/:username", async (req, res) => {
     for (let album of topAlbums.albums) {
       // check if the album info is already in the database
       const dbAlbum = await getAlbum(db, album.mbid)
-      if (!dbAlbum) {
+      if (!dbAlbum ) {
         // album information missing, this job needs to finish processing using the long running worker
         missingAlbums.push({"mbid": album.mbid, "title": album.name, "artist": album.artist.name}) 
-        continue
       }
 
     // no point in building the response further if we still need to gather missing album info
