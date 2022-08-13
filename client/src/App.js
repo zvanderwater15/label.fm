@@ -11,11 +11,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Label.fm</h1>
-        <p>Find your favorite record labels based on your top 50 albums in last.fm.</p>
+        <h1 className='App-logo'>Label.fm</h1>
+        <p>Find your favorite record labels based on your top 100 albums in last.fm.</p>
+      </header>
+      <div className='full-width'>
         <SearchUser search={setUsername}/>
         <RecordLabels username={username}/>
-      </header>
+      </div>
     </div>
   );
 }
