@@ -81,16 +81,16 @@ function RecordLabels({ username }) {
   } else {
     return (
       <div className="full-width">
-        <ScreenshotButton scrnRef={ref}/>
         <div className="full-width" ref={ref}>
           <BarChart
             chartData={labelQuery.data.labels.map((label) => ({
               y: label.name,
               x: label.albums.length,
               albums: label.albums
-            })).slice(0, 20)}
+            }))}
           />
         </div>
+        <ScreenshotButton scrnRef={ref}/>
       </div>
     );
   }
