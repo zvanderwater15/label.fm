@@ -7,7 +7,7 @@ export async function getTopTracks(username, limit=100) {
     return {tracks: trackJson.toptracks.track}
   }
   
-  export async function getTopAlbums(username, limit=50) {
+  export async function getTopAlbums(username, limit=100) {
     const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&limit=${limit}&api_key=${process.env.API_KEY}&format=json`
     const res = await fetch(url)
     const albumJson = await res.json()
