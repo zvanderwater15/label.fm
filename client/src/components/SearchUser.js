@@ -12,7 +12,7 @@ function SearchUser({search}) {
   return (
     <div>
         <form onSubmit={submit}>
-          <input value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <input spellCheck="false" value={username} onChange={(e) => setUsername(e.target.value)}/>
           <button placeholder="last.fm username" disabled={!username}>Submit</button>
         </form>
     </div>
