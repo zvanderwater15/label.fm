@@ -1,42 +1,28 @@
 .App {
   background-color: white;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   display: flex;
+  width: 40em;
+  border-radius: var(--corner-px);
+  box-shadow: 10px 10px;
   text-align: center;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(16px + 2vmin);
+  margin: 3em auto;
+  padding: 0.5em;
   color: var(--element-color);
 }
-
 
 .App-logo {
   font-family: 'Audiowide', 'Arial', monospace;
   pointer-events: none;
+  font-weight: normal;
+  font-size: 3rem;
+}
+
+.App-tagline {
+  font-size: 1.3rem;
 }
 
 
-input {
-  margin-right: 2em;
-  margin-bottom: 20px;
-  border-color: var(--element-color);
-  border-style: solid;
-  color: var(--element-color);
-  padding: 8px;
-  border-radius: var(--corner-px);
-}
-
-button {
-  background-color: var(--element-color);
-  color: var(--element-contrast);
-  border: none;
-  border-radius: var(--corner-px);
-  padding: 8px;
-  box-shadow: 1px 2px black;
-  pointer-events: all;
-}
-
-.full-width {
-  width: 100%;
-}

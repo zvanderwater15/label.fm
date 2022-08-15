@@ -3,16 +3,15 @@
   --element-color: #FF6B00;
   --element-contrast: #ffffff;
   --corner-px: 10px;
+  font-size: 16px;
 }
 
 @font-face {
   font-family: "Audiowide";
-  src: url("Audiowide-Regular.ttf");
-  /* src: url("CustomFont.woff") format("woff"),
-  url("CustomFont.otf") format("opentype"),
-  url("CustomFont.svg#filename") format("svg"); */
-  }
-  
+  src: url("fonts/Audiowide-Regular.woff");
+  src: url("fonts/Audiowide-Regular.ttf");
+}
+
   
 body {
   margin: 0;
@@ -22,6 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding-bottom: 20px;
+  background-color: var(--background-color);
 }
 
 code {
@@ -29,3 +29,30 @@ code {
     monospace;
 }
 
+input {
+  margin-right: 2em;
+  margin-bottom: 20px;
+  border-color: var(--element-color);
+  border-style: solid;
+  color: var(--element-color);
+  padding: 8px;
+  border-radius: var(--corner-px);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+button {
+  background-color: var(--element-color);
+  color: var(--element-contrast);
+  border: none;
+  border-radius: var(--corner-px);
+  padding: 8px;
+  box-shadow: 1px 2px black;
+  pointer-events: all;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.full-width {
+  width: 100%;
+}

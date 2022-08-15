@@ -1,0 +1,40 @@
+.Footer-line {
+  background-color: var(--element-color);
+  height: 1px;
+  border: 0;
+}
+
+.Footer-content {
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Footer-content > div{
+    /* width: 20em; */
+    /* flex: 1; */
+    vertical-align: top;
+    text-align: left;
+}
+
+.Footer-author {
+    text-align: left;
+    margin-top: 0;
+}
+
+.Footer-author > p{
+    margin-top: 0;
+}
+
+.Footer-credits {
+    text-align: left;
+}
+
+.Footer-credits > p {
+    margin: 0;
+}
+
+.Footer-socials {
+    display: flex;
+    justify-content: space-evenly;
+}

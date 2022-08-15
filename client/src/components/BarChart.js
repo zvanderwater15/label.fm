@@ -32,14 +32,6 @@ function BarChart({ chartData }) {
           scales: {
             x: {
               type: "linear",
-              title: {
-                display: true,
-                color: color,
-                font: {
-                  size: fontSize
-                },
-                text: "# of Albums",
-              },
               position: "top",
               ticks: {
                 precision: 0,

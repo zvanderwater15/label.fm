@@ -1,6 +1,7 @@
 import './App.css';
 import SearchUser from './components/SearchUser'
 import RecordLabels from './components/RecordLabels'
+import Footer from './components/Footer'
 import { useState } from 'react';
 
 
@@ -12,11 +13,14 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1 className='App-logo'>Label.fm</h1>
-        <p>Find your favorite record labels based on your top 100 albums in last.fm.</p>
+        <p className="App-tagline">Find your favorite record labels based on your top 100 albums in last.fm.</p>
       </header>
       <div className='full-width'>
         <SearchUser search={setUsername}/>
         <RecordLabels username={username}/>
+      </div>
+      <div className='full-width'>
+        <Footer/>
       </div>
     </div>
   );
