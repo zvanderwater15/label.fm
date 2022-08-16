@@ -1,6 +1,7 @@
 import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/UseWindowDimensions";
+import "./BarChart.css"
 
 function BarChart({ chartData }) {
   const [chart, setChart] = useState();
@@ -49,11 +50,9 @@ function BarChart({ chartData }) {
                 },
                 callback: function(value) {
                   const text = chartData[value].y
-                  let characterLimit = 25
-                  if (width < 375) {
-                    characterLimit = 17
-                  } else if (width < 1024) {
-                    characterLimit = 20
+                  let characterLimit = 21
+                  if (width <= 400) {
+                    characterLimit = 15
                   }
 
                   if ( text.length >= characterLimit) {
@@ -83,7 +82,7 @@ function BarChart({ chartData }) {
   }, [chart, chartData, width]);
 
   return (
-    <div style={{ width: "100%", height: chartData.length + "em" }}>
+    <div className="Chart" style={{ height: (chartData.length * 2) + "rem" }}>
       <canvas style={{ width: "100%" }} id="myChart"></canvas>
     </div>
   );
