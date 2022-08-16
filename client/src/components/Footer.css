@@ -33,6 +33,10 @@
     margin: 0;
 }
 
+.Footer-credits a {
+    color: inherit;
+}
+
 .Footer-socials {
     display: flex;
     justify-content: space-evenly;

@@ -2,7 +2,7 @@ import "./Footer.css";
 
 function Footer() {
   return (
-    <div>
+    <div className="Footer">
       <hr className="Footer-line" />
       <div className="Footer-content">
         <div className="Footer-author">
@@ -15,8 +15,8 @@ function Footer() {
         </div>
         <div className="Footer-credits">
           <p>Credits</p> 
-          <p>Last.fm for user and album data.</p>
-          <p>Musicbrainz for record label data.</p>
+          <p>User data - <a href="https://www.last.fm/" target="_blank" rel="noreferrer">Last.fm</a></p>
+          <p>Record label data - <a href="https://musicbrainz.org/" target="_blank" rel="noreferrer">Musicbrainz</a></p>
         </div>
       </div>
     </div>
