@@ -2,7 +2,7 @@
   background-color: white;
   /* min-height: 100vh; */
   display: flex;
-  width: 40em;
+  width: 92%;
   border-radius: var(--corner-px);
   box-shadow: 10px 10px;
   text-align: center;
@@ -12,6 +12,13 @@
   margin: 3em auto;
   padding: 0.5em;
   color: var(--element-color);
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .App {
+    width: 50em;
+  }
 }
 
 .App-logo {
