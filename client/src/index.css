@@ -46,17 +46,39 @@ input:focus, select:focus {
   outline: none
 }
 
+input::placeholder {
+  opacity: 55%;
+  color: inherit;
+}
+
 button {
   background-color: var(--element-color);
   color: var(--element-contrast);
   border: none;
   border-radius: var(--corner-px);
-  padding: 8px;
+  padding: 0.7rem;
   box-shadow: 1px 2px black;
-  pointer-events: all;
+  cursor: pointer;
   font-size: 1rem;
   font-family: inherit;
 }
+
+button:disabled {
+  box-shadow: none;
+  cursor: none;
+  opacity: 45%;
+}
+
+/* button:focus {
+  outline-color: inherit;
+  outline-style: dashed;
+} */
+
+button:active {
+  outline: none;
+  box-shadow: none;
+}
+
 
 .full-width {
   width: 100%;
