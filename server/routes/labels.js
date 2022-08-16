@@ -76,7 +76,6 @@ router.get("/:username", async (req, res) => {
         await sendMessage(message);
         res.status(202).json({"href": `/api/jobs/${jobId}`});
     } else {
-      console.log(limit, req.query.limit)
       const sortedLabels = Object.values(labels).sort((a, b) => a["albums"].length < b["albums"].length ? 1 : -1).slice(0, limit);
       res.json({"labels": sortedLabels});
     }
