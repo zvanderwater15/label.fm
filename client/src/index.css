@@ -29,16 +29,21 @@ code {
     monospace;
 }
 
-input {
+input, select {
   margin-right: 2em;
   margin-bottom: 20px;
   border-color: var(--element-color);
   border-style: solid;
   color: var(--element-color);
   padding: 8px;
+  border-width: 2px;
   border-radius: var(--corner-px);
   font-size: 1rem;
   font-family: inherit;
+}
+
+input:focus, select:focus {
+  outline: none
 }
 
 button {
