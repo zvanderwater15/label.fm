@@ -11,11 +11,11 @@ const PENDING = "pending";
 const FAILURE = "failure";
 
 // if the job will take too long, returns 202 Accepted and an href to check on the job
-function useLabels(username, enabled) {
+function useLabels(username, labelLimit, enabled) {
   return useQuery(
-    ["labels", username],
+    ["labels", username, labelLimit],
     async () => {
-      const res = await axios.get(`/api/labels/${username}/`);
+      const res = await axios.get(`/api/labels/${username}?limit=${labelLimit}`);
       return {status: res.status, labels: res.data.labels, href: res.data.href}
     },
     {
@@ -41,14 +41,14 @@ function useJobStatus(href, enabled, retry) {
   );
 }
 
-function RecordLabels({ username }) {
+function RecordLabels({ username, labelLimit }) {
   const queryClient = useQueryClient()
   const ref = createRef(null);
 
   const [href, setHref] = useState(null);
   const [jobStatus, setJobStatus] = useState(READY);
 
-  const labelQuery = useLabels(username, !!username && jobStatus === READY);
+  const labelQuery = useLabels(username, labelLimit, !!username && jobStatus === READY);
   const jobStatusQuery = useJobStatus(
     href,
     !!href && labelQuery.isFetched && labelQuery.data.status === ACCEPTED,

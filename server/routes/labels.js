@@ -8,6 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 const router = express.Router()
 
 /*
+Query params:
+limit - integer string
+Returns
 labels [
   {
     "name": "PC Music",
@@ -16,6 +19,10 @@ labels [
 ]
 */
 router.get("/:username", async (req, res) => {
+    let limit = 100; //default
+    if (!isNaN(req.query.limit)){
+      limit = parseInt(req.query.limit)
+    }
     const cluster = await connectToCluster();
     const db = await openDb(cluster);
   
@@ -69,7 +76,8 @@ router.get("/:username", async (req, res) => {
         await sendMessage(message);
         res.status(202).json({"href": `/api/jobs/${jobId}`});
     } else {
-      const sortedLabels = Object.values(labels).sort((a, b) => a["albums"].length < b["albums"].length ? 1 : -1);
+      console.log(limit, req.query.limit)
+      const sortedLabels = Object.values(labels).sort((a, b) => a["albums"].length < b["albums"].length ? 1 : -1).slice(0, limit);
       res.json({"labels": sortedLabels});
     }
 

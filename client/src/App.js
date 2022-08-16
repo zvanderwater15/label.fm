@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 function App() {
   const [username, setUsername] = useState("")
+  const [labelLimit, setLabelLimit] = useState("")
 
   return (
     <div className="App">
@@ -16,8 +17,8 @@ function App() {
         <p className="App-tagline">Find your favorite record labels based on your top 100 albums in last.fm.</p>
       </header>
       <div className='full-width'>
-        <SearchUser search={setUsername}/>
-        <RecordLabels username={username}/>
+        <SearchUser search={setUsername} requestLabels={setLabelLimit}/>
+        <RecordLabels username={username} labelLimit={labelLimit}/>
       </div>
       <div className='full-width'>
         <Footer/>
