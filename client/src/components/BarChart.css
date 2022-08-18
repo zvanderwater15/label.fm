@@ -2,3 +2,12 @@
     width: "92%";
     margin: 2em
 }
+
+.Chart-download {
+    margin-top: 1em;
+}
+
+.Chart-image {
+    width: 600px;
+    display: none
+}

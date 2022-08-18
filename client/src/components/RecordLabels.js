@@ -1,6 +1,5 @@
-import { useEffect, useState, createRef } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ScreenshotButton from './ScreenshotButton';
 import axios from "axios";
 import BarChart from "./BarChart";
 
@@ -43,8 +42,6 @@ function useJobStatus(href, enabled, retry) {
 
 function RecordLabels({ username, labelLimit }) {
   const queryClient = useQueryClient()
-  const ref = createRef(null);
-
   const [href, setHref] = useState(null);
   const [jobStatus, setJobStatus] = useState(READY);
 
@@ -81,7 +78,7 @@ function RecordLabels({ username, labelLimit }) {
   } else {
     return (
       <div className="full-width">
-        <div className="full-width" ref={ref}>
+        <div className="full-width">
           <BarChart
             chartData={labelQuery.data.labels.map((label) => ({
               y: label.name,
@@ -90,7 +87,6 @@ function RecordLabels({ username, labelLimit }) {
             }))}
           />
         </div>
-        <ScreenshotButton scrnRef={ref}/>
       </div>
     );
   }
