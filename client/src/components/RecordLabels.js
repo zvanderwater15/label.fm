@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import {  useQueryClient } from "@tanstack/react-query";
+import useLabelQuery from "../hooks/UseLabelQuery"
+import useJobStatusQuery from "../hooks/UseJobStatusQuery"
 import BarChart from "./BarChart";
 
 const NOT_FOUND = 404;
@@ -9,44 +10,14 @@ const READY = "success";
 const PENDING = "pending";
 const FAILURE = "failure";
 
-// if the job will take too long, returns 202 Accepted and an href to check on the job
-function useLabels(username, labelLimit, enabled) {
-  return useQuery(
-    ["labels", username, labelLimit],
-    async () => {
-      const res = await axios.get(`/api/labels/${username}?limit=${labelLimit}`);
-      return {status: res.status, labels: res.data.labels, href: res.data.href}
-    },
-    {
-      enabled: enabled,
-      retry: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-}
-
-// returns a status as "success", "pending", or "failure" for the given job
-function useJobStatus(href, enabled, retry) {
-  const intervalMs = 5000;
-  return useQuery(
-    ["longRunningJob", href],
-    () => axios(href).then(res => res.data),
-    {
-      enabled: enabled,
-      retry: retry,
-      refetchOnWindowFocus: false,
-      refetchInterval: intervalMs,
-    }
-  );
-}
 
 function RecordLabels({ username, labelLimit }) {
   const queryClient = useQueryClient()
   const [href, setHref] = useState(null);
   const [jobStatus, setJobStatus] = useState(READY);
 
-  const labelQuery = useLabels(username, labelLimit, !!username && jobStatus === READY);
-  const jobStatusQuery = useJobStatus(
+  const labelQuery = useLabelQuery(username, labelLimit, !!username && jobStatus === READY);
+  const jobStatusQuery = useJobStatusQuery(
     href,
     !!href && labelQuery.isFetched && labelQuery.data.status === ACCEPTED,
     jobStatus === PENDING
