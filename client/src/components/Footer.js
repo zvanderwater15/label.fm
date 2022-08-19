@@ -14,7 +14,7 @@ function Footer() {
           <a href="https://twitter.com/dualbrainedbear" target="_blank" rel="noreferrer"><i className="ai-twitter-fill"></i></a>
         </div>
         <div className="Footer-credits">
-          <p>Credits</p> 
+          <p>Credits:</p> 
           <p>User data - <a href="https://www.last.fm/" target="_blank" rel="noreferrer">Last.fm</a></p>
           <p>Record label data - <a href="https://musicbrainz.org/" target="_blank" rel="noreferrer">Musicbrainz</a></p>
         </div>
