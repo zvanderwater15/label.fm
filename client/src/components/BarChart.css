@@ -1,6 +1,6 @@
 .Chart {
-    width: "92%";
-    margin: 2em
+    width: 100%;
+    margin: 1em auto;
 }
 
 .Chart-download {
@@ -11,3 +11,12 @@
     width: 600px;
     display: none
 }
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .Chart {
+      width: 92%;
+    }
+  }
+  
+  
