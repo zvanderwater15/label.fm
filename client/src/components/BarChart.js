@@ -57,17 +57,20 @@ const getOrCreateTooltip = (chart) => {
 
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
-    tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-    tooltipEl.style.borderRadius = '3px';
+    tooltipEl.style.background = 'rgba(0, 0, 0, 0.75)';
+    tooltipEl.style.borderRadius = '10px';
     tooltipEl.style.color = 'white';
     tooltipEl.style.opacity = 1;
     tooltipEl.style.pointerEvents = 'none';
     tooltipEl.style.position = 'absolute';
-    tooltipEl.style.transform = 'translate(-50%, 0)';
+    tooltipEl.style.transform = 'translate(0, -100%)';
     tooltipEl.style.transition = 'all .1s ease';
-
+    tooltipEl.style.width = 'fit-content';
+    tooltipEl.style.textAlign = 'left';
+  
     const table = document.createElement('table');
     table.style.margin = '0px';
+    table.style.borderSpacing = "0px";
 
     tooltipEl.appendChild(table);
     chart.canvas.parentNode.appendChild(tooltipEl);
@@ -76,64 +79,76 @@ const getOrCreateTooltip = (chart) => {
   return tooltipEl;
 };
 
+const getOrCreateTooltipCaret = (chart) => {
+  let caret = chart.canvas.parentNode.querySelector('span');
+
+  if (!caret) {
+    caret = document.createElement('span')
+    caret.style.width = 0;
+    caret.style.height = 0;
+    caret.style.display = 'block';
+    caret.style.border = '10px solid transparent'
+    caret.style.transition = 'all .1s ease';
+    caret.style.borderTopColor = 'rgba(0, 0, 0, 0.75)'
+    caret.style.position = 'absolute';
+    chart.canvas.parentNode.appendChild(caret);
+  }
+
+  return caret;
+};
+
+/*
+External tooltip in the format of
+Label name (Album Count)
+Album Artist - Album title
+Album Artist - Album title
+Album Artist - Album title 
+*/
 const externalTooltipHandler = (context) => {
   // Tooltip Element
   const {chart, tooltip} = context;
   const tooltipEl = getOrCreateTooltip(chart);
+  const caretEl = getOrCreateTooltipCaret(chart);
 
   // Hide if no tooltip
   if (tooltip.opacity === 0) {
     tooltipEl.style.opacity = 0;
+    caretEl.style.opacity = 0;
     return;
   }
 
   // Set Text
   if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(b => b.lines);
-
+    const recordLabel = tooltip.title || [];
+    const numLabelText = tooltip.body[0].lines[0];
+    const title = `${recordLabel} (${numLabelText})`
+    // make tooltip title
     const tableHead = document.createElement('thead');
+    tableHead.style.fontSize = "0.9rem";
+    const tr = document.createElement('tr');
+    tr.style.borderWidth = 0;
 
-    titleLines.forEach(title => {
-      const tr = document.createElement('tr');
-      tr.style.borderWidth = 0;
+    const th = document.createElement('th');
+    th.style.borderWidth = 0;
+    const text = document.createTextNode(title);
 
-      const th = document.createElement('th');
-      th.style.borderWidth = 0;
-      const text = document.createTextNode(title);
-
-      th.appendChild(text);
-      tr.appendChild(th);
-      tableHead.appendChild(tr);
-    });
+    th.appendChild(text);
+    tr.appendChild(th);
+    tableHead.appendChild(tr);
 
     const tableBody = document.createElement('tbody');
-    bodyLines.forEach((body, i) => {
-      const colors = tooltip.labelColors[i];
-
-      const span = document.createElement('span');
-      span.style.background = colors.backgroundColor;
-      span.style.borderColor = colors.borderColor;
-      span.style.borderWidth = '2px';
-      span.style.marginRight = '10px';
-      span.style.height = '10px';
-      span.style.width = '10px';
-      span.style.display = 'inline-block';
-
+    tableBody.style.fontSize = "0.8rem";
+    tooltip.afterBody.forEach((line) => {
+      const text = document.createTextNode(line)
       const tr = document.createElement('tr');
       tr.style.backgroundColor = 'inherit';
       tr.style.borderWidth = 0;
-
       const td = document.createElement('td');
-      td.style.borderWidth = 0;
-
-      const text = document.createTextNode(body);
-
-      td.appendChild(span);
+      td.style.borderWidth = 0;  
       td.appendChild(text);
-      tr.appendChild(td);
-      tableBody.appendChild(tr);
-    });
+      tr.appendChild(td);  
+      tableBody.appendChild(tr);  
+    })
 
     const tableRoot = tooltipEl.querySelector('table');
 
@@ -148,13 +163,36 @@ const externalTooltipHandler = (context) => {
   }
 
   const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+  const tooltipWidth = tooltipEl.getBoundingClientRect().width
 
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-  tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+  // find ideal tooltip x-axis placement
+  const xPos = positionX + tooltip.caretX - 16;
+  const yPos = positionY + tooltip.caretY - 19;
+
+  // create caret
+  caretEl.style.left = xPos + "px"
+  caretEl.style.top = yPos + "px"
+
+  const toolTipLeftPos = xPos - (tooltipWidth/3)
+  if (toolTipLeftPos <= 0) {
+      // if the tooltip would go over the left screen edge, set the left side to start there
+    tooltipEl.style.left = '5px'
+  }
+  else if ((toolTipLeftPos + tooltipWidth) >= document.documentElement.clientWidth) {
+      // if the right  side would go over the screen edge, set the tooltip to end at the screen edge
+      tooltipEl.style.left = (document.documentElement.clientWidth - tooltipWidth - 1) + 'px'   
+  }
+  else {
+    tooltipEl.style.left = (xPos - (tooltipWidth/3)) + 'px';
+  }
+
+  tooltipEl.style.top = (yPos) + 'px';
   tooltipEl.style.font = tooltip.options.bodyFont.string;
   tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+
+  // make elements visible
+  tooltipEl.style.opacity = 1;
+  caretEl.style.opacity = 1;
 };
 
 function BarChart({ chartData }) {
@@ -224,7 +262,10 @@ function BarChart({ chartData }) {
               display: false,
             },
             tooltip: {
-              yAlign: "bottom",
+              // yAlign: "top",
+              enabled: false,
+              position: "average",
+              external: externalTooltipHandler,
               callbacks: {
                 afterBody: function (context) {
                   return context[0].raw.albums.map((album) => `${album.artist} - ${album.name}`)
@@ -240,7 +281,6 @@ function BarChart({ chartData }) {
   }, [chart, chartData, width]);
 
   useEffect(() => {
-    console.log(chart2)
     if (chart2) {
     setImg(chart2.toBase64Image())
   }}, [setImg, chart2])
