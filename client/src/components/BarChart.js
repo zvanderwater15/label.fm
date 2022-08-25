@@ -1,19 +1,27 @@
 import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/UseWindowDimensions";
-import "./BarChart.css"
-const color =  "#ff6b00";
+import "./BarChart.css";
+const color = "#ff6b00";
 const fontSize = 16;
 
-const generateConfig = (chartData, dataConfig, labelCharLimit=20) => {
+const generateConfig = (
+  chartData,
+  dataConfig,
+  title,
+  screenWidth,
+  customTooltip,
+  maintainAspectRatio,
+  responsive
+) => {
   const config = {
     type: "bar",
     data: dataConfig,
     options: {
-      maintainAspectRatio: true,
-      responsive: false,
+      maintainAspectRatio: maintainAspectRatio, //true
+      responsive: responsive, //false
       indexAxis: "y",
-      animation: false,
+      animation: responsive,
       scales: {
         x: {
           type: "linear",
@@ -22,54 +30,82 @@ const generateConfig = (chartData, dataConfig, labelCharLimit=20) => {
             precision: 0,
             color: color,
             font: {
-              size: fontSize
-            }
+              size: fontSize,
+            },
           },
         },
         y: {
           ticks: {
             color: color,
             font: {
-              size: fontSize
+              size: fontSize,
             },
-            callback: function(value) {
-              const text = chartData[value].y
-              if ( text.length >= labelCharLimit) {
-                return text.slice(0, text.length).substring(0, labelCharLimit -1).trim() + '...';;
-              }   
+            callback: function (value) {
+              const text = chartData[value].y;
+              let characterLimit = 21;
+              if (screenWidth <= 400) {
+                characterLimit = 14;
+              }
+
+              if (text.length >= characterLimit) {
+                return (
+                  text
+                    .slice(0, text.length)
+                    .substring(0, characterLimit - 1)
+                    .trim() + "..."
+                );
+              }
               return text;
-            }
-          }            
+            },
+          },
         },
       },
       plugins: {
         legend: {
           display: false,
-        }
+        },
+        title: {
+          text: title,
+          display: !!title,
+          color: color,
+          font: {weight: 'bold', size: '20px'},
+          padding: 20
+        },
+        tooltip: {
+          enabled: false,
+          external: customTooltip,
+          callbacks: {
+            afterBody: function (context) {
+              return context[0].raw.albums.map(
+                (album) => `${album.artist} - ${album.name}`
+              );
+            },
+          },
+        },
       },
     },
   };
   return config;
-}
+};
 
 const getOrCreateTooltip = (chart) => {
-  let tooltipEl = chart.canvas.parentNode.querySelector('div');
+  let tooltipEl = chart.canvas.parentNode.querySelector("div");
 
   if (!tooltipEl) {
-    tooltipEl = document.createElement('div');
-    tooltipEl.style.background = 'rgba(0, 0, 0, 0.75)';
-    tooltipEl.style.borderRadius = '10px';
-    tooltipEl.style.color = 'white';
+    tooltipEl = document.createElement("div");
+    tooltipEl.style.background = "rgba(0, 0, 0, 0.75)";
+    tooltipEl.style.borderRadius = "10px";
+    tooltipEl.style.color = "white";
     tooltipEl.style.opacity = 1;
-    tooltipEl.style.pointerEvents = 'none';
-    tooltipEl.style.position = 'absolute';
-    tooltipEl.style.transform = 'translate(0, -100%)';
-    tooltipEl.style.transition = 'all .1s ease';
-    tooltipEl.style.width = 'fit-content';
-    tooltipEl.style.textAlign = 'left';
-  
-    const table = document.createElement('table');
-    table.style.margin = '0px';
+    tooltipEl.style.pointerEvents = "none";
+    tooltipEl.style.position = "absolute";
+    tooltipEl.style.transform = "translate(0, -100%)";
+    tooltipEl.style.transition = "all .1s ease";
+    tooltipEl.style.width = "fit-content";
+    tooltipEl.style.textAlign = "left";
+
+    const table = document.createElement("table");
+    table.style.margin = "0px";
     table.style.borderSpacing = "0px";
 
     tooltipEl.appendChild(table);
@@ -80,17 +116,17 @@ const getOrCreateTooltip = (chart) => {
 };
 
 const getOrCreateTooltipCaret = (chart) => {
-  let caret = chart.canvas.parentNode.querySelector('span');
+  let caret = chart.canvas.parentNode.querySelector("span");
 
   if (!caret) {
-    caret = document.createElement('span')
+    caret = document.createElement("span");
     caret.style.width = 0;
     caret.style.height = 0;
-    caret.style.display = 'block';
-    caret.style.border = '10px solid transparent'
-    caret.style.transition = 'all .1s ease';
-    caret.style.borderTopColor = 'rgba(0, 0, 0, 0.75)'
-    caret.style.position = 'absolute';
+    caret.style.display = "block";
+    caret.style.border = "10px solid transparent";
+    caret.style.transition = "all .1s ease";
+    caret.style.borderTopColor = "rgba(0, 0, 0, 0.75)";
+    caret.style.position = "absolute";
     chart.canvas.parentNode.appendChild(caret);
   }
 
@@ -106,7 +142,7 @@ Album Artist - Album title
 */
 const externalTooltipHandler = (context) => {
   // Tooltip Element
-  const {chart, tooltip} = context;
+  const { chart, tooltip } = context;
   const tooltipEl = getOrCreateTooltip(chart);
   const caretEl = getOrCreateTooltipCaret(chart);
 
@@ -121,14 +157,14 @@ const externalTooltipHandler = (context) => {
   if (tooltip.body) {
     const recordLabel = tooltip.title || [];
     const numLabelText = tooltip.body[0].lines[0];
-    const title = `${recordLabel} (${numLabelText})`
+    const title = `${recordLabel} (${numLabelText})`;
     // make tooltip title
-    const tableHead = document.createElement('thead');
+    const tableHead = document.createElement("thead");
     tableHead.style.fontSize = "0.9rem";
-    const tr = document.createElement('tr');
+    const tr = document.createElement("tr");
     tr.style.borderWidth = 0;
 
-    const th = document.createElement('th');
+    const th = document.createElement("th");
     th.style.borderWidth = 0;
     const text = document.createTextNode(title);
 
@@ -136,21 +172,21 @@ const externalTooltipHandler = (context) => {
     tr.appendChild(th);
     tableHead.appendChild(tr);
 
-    const tableBody = document.createElement('tbody');
+    const tableBody = document.createElement("tbody");
     tableBody.style.fontSize = "0.8rem";
     tooltip.afterBody.forEach((line) => {
-      const text = document.createTextNode(line)
-      const tr = document.createElement('tr');
-      tr.style.backgroundColor = 'inherit';
+      const text = document.createTextNode(line);
+      const tr = document.createElement("tr");
+      tr.style.backgroundColor = "inherit";
       tr.style.borderWidth = 0;
-      const td = document.createElement('td');
-      td.style.borderWidth = 0;  
+      const td = document.createElement("td");
+      td.style.borderWidth = 0;
       td.appendChild(text);
-      tr.appendChild(td);  
-      tableBody.appendChild(tr);  
-    })
+      tr.appendChild(td);
+      tableBody.appendChild(tr);
+    });
 
-    const tableRoot = tooltipEl.querySelector('table');
+    const tableRoot = tooltipEl.querySelector("table");
 
     // Remove old children
     while (tableRoot.firstChild) {
@@ -162,45 +198,47 @@ const externalTooltipHandler = (context) => {
     tableRoot.appendChild(tableBody);
   }
 
-  const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
-  const tooltipWidth = tooltipEl.getBoundingClientRect().width
+  const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+  const tooltipWidth = tooltipEl.getBoundingClientRect().width;
 
   // find ideal tooltip x-axis placement
   const xPos = positionX + tooltip.caretX - 16;
   const yPos = positionY + tooltip.caretY - 19;
 
   // create caret
-  caretEl.style.left = xPos + "px"
-  caretEl.style.top = yPos + "px"
+  caretEl.style.left = xPos + "px";
+  caretEl.style.top = yPos + "px";
 
-  const toolTipLeftPos = xPos - (tooltipWidth/3)
+  const toolTipLeftPos = xPos - tooltipWidth / 3;
   if (toolTipLeftPos <= 0) {
-      // if the tooltip would go over the left screen edge, set the left side to start there
-    tooltipEl.style.left = '5px'
-  }
-  else if ((toolTipLeftPos + tooltipWidth) >= document.documentElement.clientWidth) {
-      // if the right  side would go over the screen edge, set the tooltip to end at the screen edge
-      tooltipEl.style.left = (document.documentElement.clientWidth - tooltipWidth - 1) + 'px'   
-  }
-  else {
-    tooltipEl.style.left = (xPos - (tooltipWidth/3)) + 'px';
+    // if the tooltip would go over the left screen edge, set the left side to start there
+    tooltipEl.style.left = "5px";
+  } else if (
+    toolTipLeftPos + tooltipWidth >=
+    document.documentElement.clientWidth
+  ) {
+    // if the right  side would go over the screen edge, set the tooltip to end at the screen edge
+    tooltipEl.style.left =
+      document.documentElement.clientWidth - tooltipWidth - 1 + "px";
+  } else {
+    tooltipEl.style.left = xPos - tooltipWidth / 3 + "px";
   }
 
-  tooltipEl.style.top = (yPos) + 'px';
+  tooltipEl.style.top = yPos + "px";
   tooltipEl.style.font = tooltip.options.bodyFont.string;
-  tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+  tooltipEl.style.padding =
+    tooltip.options.padding + "px " + tooltip.options.padding + "px";
 
   // make elements visible
   tooltipEl.style.opacity = 1;
   caretEl.style.opacity = 1;
 };
 
-function BarChart({ chartData }) {
+function BarChart({ chartData, user }) {
   const [chart, setChart] = useState();
   const [chart2, setChart2] = useState();
   const [img, setImg] = useState();
   const { width } = useWindowDimensions();
-
 
   useEffect(() => {
     if (!chart) {
@@ -216,76 +254,27 @@ function BarChart({ chartData }) {
           },
         ],
       };
-      
-      const config = {
-        type: "bar",
-        data: data,
-        options: {
-          maintainAspectRatio: false,
-          responsive: true,
-          indexAxis: "y",
-          scales: {
-            x: {
-              type: "linear",
-              position: "top",
-              ticks: {
-                precision: 0,
-                color: color,
-                font: {
-                  size: fontSize
-                }
-              },
-            },
-            y: {
-              ticks: {
-                color: color,
-                font: {
-                  size: fontSize
-                },
-                callback: function(value) {
-                  const text = chartData[value].y
-                  let characterLimit = 21
-                  if (width <= 400) {
-                    characterLimit = 14
-                  }
 
-                  if ( text.length >= characterLimit) {
-                    return text.slice(0, text.length).substring(0, characterLimit -1).trim() + '...';;
-                  }   
-                  return text;
-                }
-              }            
-            },
-          },
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              // yAlign: "top",
-              enabled: false,
-              position: "average",
-              external: externalTooltipHandler,
-              callbacks: {
-                afterBody: function (context) {
-                  return context[0].raw.albums.map((album) => `${album.artist} - ${album.name}`)
-                }
-          },
-            },
-          },
-        },
-      };
-      setChart(new Chart(ctx, config));
-      setChart2(new Chart(document.getElementById("myChart2"), generateConfig(chartData, data, 30)));
+      setChart(new Chart(ctx, generateConfig(chartData, data, null, width, externalTooltipHandler, false, true)));
+      setChart2(
+        new Chart(
+          document.getElementById("myChart2"),
+          generateConfig(chartData, data, `${user}'s Top Record Labels`, width, null, true, false)
+        )
+      );
     }
   }, [chart, chartData, width]);
 
   useEffect(() => {
     if (chart2) {
-    setImg(chart2.toBase64Image())
-  }}, [setImg, chart2])
+      setImg(chart2.toBase64Image());
+    }
+  }, [setImg, chart2]);
 
-  const download = (image, { name = "labelfmchart", extension = "jpg" } = {}) => {
+  const download = (
+    image,
+    { name = "labelfmchart", extension = "jpg" } = {}
+  ) => {
     const a = document.createElement("a");
     a.href = image;
     a.download = name + "." + extension;
@@ -294,14 +283,27 @@ function BarChart({ chartData }) {
 
   return (
     <div className="Chart">
-      <div className="Chart-display" style={{ height: (chartData.length * 1.8) + "rem" }}>
+      <div
+        className="Chart-display"
+        style={{ height: chartData.length * 1.8 + "rem" }}
+      >
         <canvas className="full-width" id="myChart"></canvas>
       </div>
 
       {/* Hidden Canvas to build the downloadable imge*/}
-      <canvas className="Chart-image" style={{  width: "600px", height: (chartData.length * 2) + "rem", display: "none"}} id="myChart2"></canvas>
+      <canvas
+        className="Chart-image"
+        style={{
+          width: "600px",
+          height: chartData.length * 2 + "rem",
+          display: "none",
+        }}
+        id="myChart2"
+      ></canvas>
 
-      <button className="Chart-download" onClick={() => download(img)}>Download</button>
+      <button className="Chart-download" onClick={() => download(img)}>
+        Download
+      </button>
     </div>
   );
 }

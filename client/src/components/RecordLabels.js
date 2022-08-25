@@ -76,7 +76,9 @@ function RecordLabels({ username, labelLimit }) {
               y: label.name,
               x: label.albums.length,
               albums: label.albums,
-            }))}
+            }))
+          }
+          user={username}
           />
         </div>
       </div>
