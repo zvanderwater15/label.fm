@@ -5,7 +5,7 @@ import { getFriends, getTopAlbums } from "../lib/lastfm.js";
 import { sendMessage } from "../lib/queues.js";
 import { v4 as uuidv4 } from 'uuid';
 
-async function lastfmUsers(db, startingUser, limit = 1000) {
+async function lastfmUsers(db, startingUser, limit = 50) {
   const visitedUsers = [];
   const visitedMBIDs = [];
   const users = [startingUser];
@@ -71,7 +71,11 @@ async function populateDB(strategy) {
 
 // Use a self-calling function so we can use async / await.
 (async () => {
-  const startingUser = "ZoiAran";
+  const args = process.argv.slice(2);
+  let startingUser = "ZoiAran"
+  if (args.length) {
+    startingUser = args[0];
+  }
   const strategy = lastfmUsers;
-  const clientResult = await populateDB(strategy, startingUser);
+  await populateDB(strategy, startingUser);  
 })();
