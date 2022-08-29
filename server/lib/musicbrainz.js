@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import retryFetch from './retryFetch.js';
 
 export async function getLabels(mbid) {
   const release = await getRelease(mbid)
@@ -9,26 +9,11 @@ export async function getLabels(mbid) {
 }
 
 export async function getRelease(mbid) {
-  const backoff = 1000;
-  let retry = false;
-  let res;
-  while (!res || retry) {
-    const url = `https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`
-    res = await fetch(url, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    if (res.status === 503) {
-      console.log("musicbrainz 503, waiting for " + backoff + "ms then retrying")
-      retry = true;
-      await Promise(() => setTimeout(backoff))
-      backoff *= 2;
-    }  else {
-      retry = false;
+  const res = await retryFetch(`https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`, {
+    headers: {
+      'Accept': 'application/json'
     }
-  }
+  })
   const releaseRes = await res.json();
-  console.log("release response", releaseRes);
-  return releaseRes
+  return releaseRes  
 }
