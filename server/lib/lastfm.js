@@ -1,12 +1,5 @@
 import retryFetch from "./retryFetch.js";
 
-export async function getTopTracks(username, limit = 100) {
-  const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&limit=${limit}&api_key=${process.env.API_KEY}&format=json`;
-  const res = await retryFetch(url);
-  const trackJson = await res.json();
-  return { tracks: trackJson.toptracks.track };
-}
-
 export async function getTopAlbums(username, limit = 100) {
   const url = `http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&limit=${limit}&api_key=${process.env.API_KEY}&format=json`;
   const res = await retryFetch(url);

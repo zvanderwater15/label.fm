@@ -9,12 +9,13 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "mongodb": "^4.7.0",
-    "node-fetch": "^3.2.3",
+    "node-fetch": "^2.x",
     "pg": "^8.7.3",
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest ./server/tests",
+    "debug": "node ./node_modules/jest/bin/jest.js --runInBand ./server/tests",
     "start": "node server/index.js",
     "worker": "node server/worker/index.js",
     "build": "cd client && npm install && npm run build",
@@ -33,5 +34,12 @@
   "bugs": {
     "url": "https://github.com/zvanderwater15/musicfingerprint/issues"
   },
-  "homepage": "https://github.com/zvanderwater15/musicfingerprint#readme"
+  "homepage": "https://github.com/zvanderwater15/musicfingerprint#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "babel-jest": "^29.0.1",
+    "jest": "^29.0.1",
+    "supertest": "^6.2.4"
+  }
 }

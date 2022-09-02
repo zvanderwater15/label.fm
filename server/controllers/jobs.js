@@ -1,11 +1,9 @@
 
-import express from "express";
 import { getJob } from "../lib/db/records.js";
 import { connectToCluster, openDb, closeConnection } from "../lib/db/conn.js";
 
-const router = express.Router()
 
-router.get("/:jobId", async (req, res) => {
+export const checkJob = async (req, res) => {
     const cluster = await connectToCluster();
     const db = await openDb(cluster);
 
@@ -17,6 +15,5 @@ router.get("/:jobId", async (req, res) => {
     } else {
         res.status(404);
     }
-  });
-  
-export default router;
+}
+

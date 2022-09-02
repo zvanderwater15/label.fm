@@ -1,10 +1,10 @@
 // server/index.js
-import 'dotenv/config'
+import "dotenv/config";
 import express, { static as expressStatic } from "express";
-import { resolve, dirname } from 'path';
-import {fileURLToPath} from 'url';
-import labelRoutes from './routes/labels.js'
-import jobRoutes from './routes/jobs.js'
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+import { topLabelsForUser } from "./controllers/labels.js";
+import { checkJob } from "./controllers/jobs.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,11 +18,23 @@ app.listen(PORT, () => {
 });
 
 // Have Node serve the files for our built React app
-app.use(expressStatic(resolve(__dirname, '../client/build')));
-app.use('/api/labels', labelRoutes);
-app.use('/api/jobs', jobRoutes);
+app.use(expressStatic(resolve(__dirname, "../client/build")));
+
+/*
+Query params:
+limit - integer string
+Returns
+labels [
+  {
+    "name": "PC Music",
+    "albums": ["7g", "Apple"]
+  }
+]
+*/
+app.use("/api/labels/:username", topLabelsForUser);
+app.use("/api/jobs/:jobId", checkJob);
 
 // All other GET requests not handled before will return our React app
-app.get('*', (req, res) => {
-  res.sendFile(resolve(__dirname, '../client/build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(resolve(__dirname, "../client/build", "index.html"));
 });

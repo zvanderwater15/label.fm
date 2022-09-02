@@ -85,7 +85,14 @@ export async function getUserFriends(db, username) {
   return userFriends ? userFriends.friends : null;
 }
 
-export async function startJob(db, jobID, jobUrl) {
+export async function deleteJob(db, jobID) {
+  const album = await db.collection(JOBS).deleteOne({
+    jobID,
+  });
+  return album;
+}
+
+export async function insertJob(db, jobID, jobUrl) {
   const album = await db.collection(JOBS).insertOne({
     jobID,
     status: PENDING,

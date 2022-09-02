@@ -1,7 +1,9 @@
 import { MongoClient } from "mongodb";
+require('dotenv').config();
 
 export async function connectToCluster() {
     let mongoClient;
+
     const uri = process.env.ATLAS_URI;
     console.log(uri)
     try {
