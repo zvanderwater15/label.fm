@@ -1,13 +1,14 @@
 # Label.fm
 
-Work in Progress!
-
+A simple website that analyzes a user's favorite albums to find their top record labels. Hopefully this can lead to new music discovery - if you like a few albums from one label, you may like some other ones they put out.
 
 - Takes a last.fm username and displays the top record labels that user listens to.
 
 - Consumes to the last.fm API for user listening history and musicbrainz API for album information.
 
-- MERN stack SPA hosted on Heroku, using RabbitMQ to send messages between the API and the Worker.
+
+## Technologies/Languages
+MERN stack SPA hosted on Heroku, using RabbitMQ to send messages between the API and the Worker, which are both node processes. Uses Jest for testing.
 
 
 ## Frontend
