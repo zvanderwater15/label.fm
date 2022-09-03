@@ -259,7 +259,7 @@ function BarChart({ chartData, user }) {
       setChart2(
         new Chart(
           document.getElementById("myChart2"),
-          generateConfig(chartData, data, `${user}'s Top Record Labels`, width, null, true, false)
+          generateConfig(chartData, data, `${user}'s Top Record Labels By # of Favorite Albums`, width, null, true, false)
         )
       );
     }
