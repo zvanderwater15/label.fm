@@ -53,10 +53,10 @@ function RecordLabels({ username, labelLimit }) {
     );
   } else if (!username) {
     return null;
-  } else if (labelQuery.error) {
-    return <p>{labelQuery.error.message}</p>;
-  } else if (jobStatus === FAILURE) {
-    return <p>Unknown Error</p>;
+  } else if (labelQuery.error && labelQuery.error.response.status === NOT_FOUND) {
+    return <p>User not found</p>;
+  } else if (jobStatus === FAILURE || labelQuery.error) {
+    return <p>Unknown error</p>;
   } else if (
     labelQuery.data.status === ACCEPTED ||
     jobStatusQuery === PENDING

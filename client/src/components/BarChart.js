@@ -241,7 +241,7 @@ function BarChart({ chartData, user }) {
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    if (!chart) {
+    if (!chart && chartData.length) {
       const ctx = document.getElementById("myChart");
       const data = {
         datasets: [
@@ -280,6 +280,10 @@ function BarChart({ chartData, user }) {
     a.download = name + "." + extension;
     a.click();
   };
+
+  if (chartData.length === 0) {
+    return <p>No listening history found</p>
+  }
 
   return (
     <div className="Chart">
