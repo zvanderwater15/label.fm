@@ -6,6 +6,7 @@ import BarChart from "./BarChart";
 import Loader from "./Loader";
 
 const NOT_FOUND = 404;
+const TOO_MANY_REQUESTS = 429;
 const ACCEPTED = 202;
 const READY = "success";
 const PENDING = "pending";
@@ -53,8 +54,21 @@ function RecordLabels({ username, labelLimit }) {
     );
   } else if (!username) {
     return null;
-  } else if (labelQuery.error && labelQuery.error.response.status === NOT_FOUND) {
+  } else if (
+    labelQuery.error &&
+    labelQuery.error.response.status === NOT_FOUND
+  ) {
     return <p>User not found</p>;
+  } else if (
+    labelQuery.error &&
+    labelQuery.error.response.status === TOO_MANY_REQUESTS
+  ) {
+    return (
+      <p>
+        Sorry, Label.fm is currently experiencing too many requests. Try again
+        later?
+      </p>
+    );
   } else if (jobStatus === FAILURE || labelQuery.error) {
     return <p>Unknown error</p>;
   } else if (
@@ -64,6 +78,7 @@ function RecordLabels({ username, labelLimit }) {
     return (
       <div className="full-width">
         <Loader />
+        <p>I haven't seen these albums before!</p>
         <p>This may take a few minutes...</p>
       </div>
     );
@@ -76,9 +91,8 @@ function RecordLabels({ username, labelLimit }) {
               y: label.name,
               x: label.albums.length,
               albums: label.albums,
-            }))
-          }
-          user={username}
+            }))}
+            user={username}
           />
         </div>
       </div>

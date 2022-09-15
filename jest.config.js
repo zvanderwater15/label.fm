@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -59,10 +59,10 @@ export default {
   // forceCoverageMatch: [],
 
   // A path to a module which exports an async function that is triggered once before all test suites
-  // globalSetup: undefined,
+  globalSetup: "./server/tests/globalSetup.js",
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  // globalTeardown: undefined,
+  globalTeardown:  "./server/tests/globalTeardown.js",
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -173,18 +173,15 @@ export default {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-    transform: {
-      "^.+\\.[t|j]sx?$": "babel-jest",
-      "node-fetch": "babel-jest"
-    },
-    // transformIgnorePatterns: [
-    //   "\\\\node_modules\\whatwg_url\\.[^\\\\]+$"
-    // ],
+  // transform: {
+  //   "^.+\\.[t|j]sx?$": "babel-jest",
+  //   "node-fetch": "babel-jest"
+  // },
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: [
-    "\\\\node_modules\\\\",
-    "\\.pnp\\.[^\\\\]+$"
-  ],
+  // transformIgnorePatterns: [
+  //   "\\\\node_modules\\\\",
+  //   "\\.pnp\\.[^\\\\]+$"
+  // ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

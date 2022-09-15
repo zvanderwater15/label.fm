@@ -1,6 +1,7 @@
-import retryFetch from './retryFetch.js';
+const retryFetch = require('./retryFetch.js');
+const { NotFoundError, RateLimitedError, UnknownAPIError } = require("./errors.js");
 
-export async function getLabels(mbid) {
+async function getLabels(mbid) {
   const release = await getRelease(mbid)
   if (!release['label-info']) return []
   // get label names and remove duplicates
@@ -8,12 +9,26 @@ export async function getLabels(mbid) {
   return labels
 }
 
-export async function getRelease(mbid) {
-  const res = await retryFetch(`https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`, {
+async function getRelease(mbid) {
+  const res = await retryFetch(`https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`, delay=undefined, retry=undefined, {
     headers: {
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'User-Agent': 'Label.fm/0.9 ( zoe.van42@gmail.com )'
     }
   })
-  const releaseRes = await res.json();
-  return releaseRes  
+
+  if (res.status === 400  || res.status === 404) {
+    throw new NotFoundError("Musicbrainz", `Invalid mbid - ${mbid}`)
+  }
+  else if (res.status === 503 || res.status === 429) {
+    throw new RateLimitedError("Musicbrainz", "Musicbrainz is busy", res.status)
+  }
+  else if (!res.ok) {
+    throw new UnknownAPIError("Musicbrainz", res.body, res.status)
+  }
+
+  const release = await res.json();
+  return release 
 }
+
+module.exports = { getLabels, getRelease } 

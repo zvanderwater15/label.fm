@@ -1,0 +1,79 @@
+{
+    "friends": {
+        "@attr": {
+            "user": "ZoiAran",
+            "totalPages": "27",
+            "page": "1",
+            "perPage": "2",
+            "total": "53"
+        },
+        "user": [
+            {
+                "name": "fake_user",
+                "url": "https://www.last.fm/user/fake_user",
+                "country": "United States",
+                "playlists": "0",
+                "playcount": "0",
+                "image": [
+                    {
+                        "size": "small",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/34s/b87c5rtbc267ca267c5a97d61c80a5eb5.png"
+                    },
+                    {
+                        "size": "medium",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/64s/b87c5tc267ca267c5a97d61c80a5eb5.png"
+                    },
+                    {
+                        "size": "large",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/174s/b87c59bc267ca267c5a97d61wer0a5eb5.png"
+                    },
+                    {
+                        "size": "extralarge",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/b87c59be267ca267c5a97d61c80a5eb5.png"
+                    }
+                ],
+                "registered": {
+                    "unixtime": "1519991218",
+                    "#text": "2018-03-02 11:46"
+                },
+                "realname": "Jery",
+                "subscriber": "0",
+                "bootstrap": "0",
+                "type": "user"
+            },
+            {
+                "name": "Fake_user3",
+                "url": "https://www.last.fm/user/fakeuser3",
+                "country": "United States",
+                "playlists": "0",
+                "playcount": "0",
+                "image": [
+                    {
+                        "size": "small",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/34s/6011ffbd66f64602495c613ebcab.png"
+                    },
+                    {
+                        "size": "medium",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/64s/6011ffb7eab666d02495c613ebcab.png"
+                    },
+                    {
+                        "size": "large",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/174s/6011ffb7eab6dsf495c613ebcab.png"
+                    },
+                    {
+                        "size": "extralarge",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/6011fsdfb666f64602495c613ebcab.png"
+                    }
+                ],
+                "registered": {
+                    "unixtime": "1284250852",
+                    "#text": "2010-09-12 00:20"
+                },
+                "realname": "Fakeuser • Portland, OR, USA",
+                "subscriber": "1",
+                "bootstrap": "0",
+                "type": "subscriber"
+            }
+        ]
+    }
+}

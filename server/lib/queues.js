@@ -1,6 +1,6 @@
-import amqp from "amqplib";
+const amqp = require("amqplib");
 
-export async function sendMessage(msg) {
+async function sendMessage(msg) {
   amqp.connect(process.env.CLOUDAMQP_URL).then((connection) => {
     connection.createChannel().then((channel) => {
       channel.assertQueue(process.env.QUEUE_NAME, {
@@ -15,7 +15,7 @@ export async function sendMessage(msg) {
   });
 }
 
-export async function receiveMessage(callback) {
+async function receiveMessage(callback) {
   return amqp.connect(process.env.CLOUDAMQP_URL).then((connection) =>
     connection.createChannel().then((channel) => {
       channel.assertQueue(process.env.QUEUE_NAME, {
@@ -40,3 +40,5 @@ export async function receiveMessage(callback) {
     })
   );
 }
+
+module.exports = { sendMessage, receiveMessage }

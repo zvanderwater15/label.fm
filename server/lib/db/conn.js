@@ -1,30 +1,30 @@
-import { MongoClient } from "mongodb";
-import "dotenv/config";
+const { MongoClient } = require("mongodb");
+require("dotenv/config");
 
-export async function connectToCluster() {
-    let mongoClient;
-
-    const uri = process.env.ATLAS_URI;
-    console.log(uri)
-    try {
-        mongoClient = new MongoClient(uri);
-        console.log('Connecting to MongoDB Atlas cluster...');
-        await mongoClient.connect();
-        console.log('Successfully connected to MongoDB Atlas!');
- 
-        return mongoClient;
-    } catch (error) {
-        console.error('Connection to MongoDB Atlas failed!', error);
-        process.exit();
-    }
- }
- 
- export async function openDb(cluster) {
-    const db = cluster.db("albums");
-    return db
- }
- 
- export async function closeConnection(connection) {
-    return connection.close()
+async function connectToCluster() {
+let mongoClient;
+  try {
+    mongoClient = new MongoClient(process.env.MONGO_URI);
+    await mongoClient.connect();
+    return mongoClient;
+  } catch (error) {
+    console.error("Connection to MongoDB Atlas failed!", error);
+    process.exit();
+  }
 }
- 
+
+async function openDb(cluster, dbName=process.env.MONGO_DB) {
+  const db = cluster.db(dbName);
+  return db;
+}
+
+async function closeConnection(connection) {
+  return connection.close();
+
+}
+
+module.exports = {
+  connectToCluster,
+  openDb,
+  closeConnection,
+};

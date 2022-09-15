@@ -1,11 +1,13 @@
-import "dotenv/config";
-import { closeConnection, connectToCluster, openDb } from "../lib/db/conn.js";
-import { getAlbum, getUserAlbums, getUserFriends, insertUserAlbums, insertUserFriends, startJob } from "../lib/db/records.js";
-import { getFriends, getTopAlbums } from "../lib/lastfm.js";
-import { sendMessage } from "../lib/queues.js";
-import { v4 as uuidv4 } from 'uuid';
+require("dotenv/config");
+const { closeConnection, connectToCluster, openDb } = require("../lib/db/conn.js");
+const { getAlbum, getUserAlbums, getUserFriends, insertUserAlbums, insertUserFriends} = require("../lib/db/records.js");
+const { getFriends, getTopAlbums } = require("../lib/lastfm.js");
+const { sendMessage } = require("../lib/queues.js");
+const { v4 : uuidv4 } = require('uuid');
+const { createJob } = require("../lib/jobs.js");
+const { NotFoundError } = require("../lib/errors.js");
 
-async function lastfmUsers(db, startingUser, limit = 50) {
+async function lastfmUsers(db, startingUser, limit = 500) {
   const visitedUsers = [];
   const visitedMBIDs = [];
   const users = [startingUser];
@@ -17,11 +19,22 @@ async function lastfmUsers(db, startingUser, limit = 50) {
     let friends = await getUserFriends(db, user);
     if (!friends) {
       await new Promise(r => setTimeout(r, 1100)); //last.fm api limits calls to one per second
-      friends = await getFriends(user);
+      try {
+        friends = await getFriends(user);
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          console.log("user not found " + user)
+          continue
+        }
+        else {
+          throw(err)
+        }
+      }
       await insertUserFriends(db, user, friends)  
     }
 
     console.log(user + " has " + friends.users.length + " friends");
+
     friends.users.forEach((friend) => {
       if (!visitedUsers.includes(friend.name)) {
         visitedUsers.push(friend.name);
@@ -51,9 +64,8 @@ async function lastfmUsers(db, startingUser, limit = 50) {
 
     // send albums to worker queue
     if (missingAlbums.length > 0) {
-      const jobId = uuidv4();
       const jobUrl = `/api/labels/${user}`
-      await startJob(db, jobId, jobUrl);
+      const jobId = await createJob(db, jobUrl);
       const message = JSON.stringify({"jobID": jobId, "albums": missingAlbums})
       await sendMessage(message)    
     }

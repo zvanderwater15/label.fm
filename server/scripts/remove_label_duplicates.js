@@ -1,6 +1,6 @@
-import "dotenv/config";
-import { closeConnection, connectToCluster, openDb } from "../lib/db/conn.js";
-import { getAllAlbums, updateAlbumLabels } from "../lib/db/records.js";
+require("dotenv/config");
+const { closeConnection, connectToCluster, openDb } = require("../lib/db/conn.js");
+const { getAllAlbums, updateAlbumLabels } = require("../lib/db/records.js");
 
 async function removeDuplicates() {
   const cluster = await connectToCluster();

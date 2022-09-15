@@ -1,14 +1,7 @@
-export const ALBUMS = "albums";
-export const USER_ALBUMS = "lastfm_user_albums";
-export const USER_FRIENDS = "lastfm_user_friends";
-export const JOBS = "jobs";
+const constants = require("../constants")
 
-export const PENDING = "pending";
-export const SUCCESS = "success";
-export const FAILURE = "failure";
-
-export async function insertAlbum(db, mbid, artist, title, labels) {
-  const album = await db.collection(ALBUMS).insertOne({
+async function insertAlbum(db, mbid, artist, title, labels) {
+  const album = await db.collection(constants.ALBUMS).insertOne({
     mbid,
     artist,
     title,
@@ -17,101 +10,122 @@ export async function insertAlbum(db, mbid, artist, title, labels) {
   return album;
 }
 
-export async function getAllAlbums(db) {
-  const albums = await db.collection(ALBUMS).find();
+async function getAllAlbums(db) {
+  const albums = await db.collection(constants.ALBUMS).find();
   return albums;
 }
 
-export async function getAlbum(db, mbid) {
-  const album = await db.collection(ALBUMS).findOne({ mbid: mbid });
+async function getAlbum(db, mbid) {
+  const album = await db.collection(constants.ALBUMS).findOne({ mbid: mbid });
   return album;
 }
 
-export async function updateAlbumLabels(db, mbid, labels) {
+async function updateAlbumLabels(db, mbid, labels) {
   const album = await db
-    .collection(ALBUMS)
+    .collection(constants.ALBUMS)
     .updateOne({ mbid: mbid }, { $set: { labels: labels } });
   return album;
 }
 
-export async function insertUserAlbums(db, username, albums) {
-  const userAlbums = await db.collection(USER_ALBUMS).updateOne(
+async function insertUserAlbums(db, username, albums) {
+  const userAlbums = await db.collection(constants.USER_ALBUMS).updateOne(
     { username },
-    {$set: {
-      username,
-      albums,
-    }},
+    {
+      $set: {
+        username,
+        albums,
+      },
+    },
     { upsert: true }
   );
   return userAlbums;
 }
 
-export async function getAllUserAlbums(db) {
-  const cursor = await db.collection(USER_ALBUMS).find();
+async function getAllUserAlbums(db) {
+  const cursor = await db.collection(constants.USER_ALBUMS).find();
   return cursor;
 }
 
-export async function getUserAlbums(db, username) {
+async function getUserAlbums(db, username) {
   const userAlbums = await db
-    .collection(USER_ALBUMS)
+    .collection(constants.USER_ALBUMS)
     .findOne({ username: username });
   return userAlbums ? userAlbums.albums : null;
 }
 
-export async function deleteUserAlbums(db, username) {
+async function deleteUserAlbums(db, username) {
   const deleted = await db
-    .collection(USER_ALBUMS)
+    .collection(constants.USER_ALBUMS)
     .deleteOne({ username: username });
   return deleted;
 }
 
-export async function insertUserFriends(db, username, friends) {
-  const userFriends = await db.collection(USER_FRIENDS).updateOne(
+async function insertUserFriends(db, username, friends) {
+  const userFriends = await db.collection(constants.USER_FRIENDS).updateOne(
     { username },
-    {$set: {
-      username,
-      friends,
-    }},
+    {
+      $set: {
+        username,
+        friends,
+      },
+    },
     { upsert: true }
   );
 
   return userFriends;
 }
 
-export async function getUserFriends(db, username) {
+async function getUserFriends(db, username) {
   const userFriends = await db
-    .collection(USER_FRIENDS)
+    .collection(constants.USER_FRIENDS)
     .findOne({ username: username });
   return userFriends ? userFriends.friends : null;
 }
 
-export async function deleteJob(db, jobID) {
-  const album = await db.collection(JOBS).deleteOne({
+async function deleteJob(db, jobID) {
+  const album = await db.collection(constants.JOBS).deleteOne({
     jobID,
   });
   return album;
 }
 
-export async function insertJob(db, jobID, jobUrl) {
-  const album = await db.collection(JOBS).insertOne({
+async function insertJob(db, jobID, jobUrl) {
+  const album = await db.collection(constants.JOBS).insertOne({
     jobID,
-    status: PENDING,
+    status: constants.PENDING,
     href: jobUrl,
   });
   return album;
 }
 
-export async function updateJob(db, jobID, status) {
-  if (status != PENDING && status != SUCCESS && status != FAILURE) {
+async function updateJob(db, jobID, status) {
+  if (status != constants.PENDING && status != constants.SUCCESS && status != constants.FAILURE) {
     throw Error(`Invalid job status: ${status}`);
   }
   const album = await db
-    .collection(JOBS)
+    .collection(constants.JOBS)
     .updateOne({ jobID: jobID }, { $set: { status: status } });
   return album;
 }
 
-export async function getJob(db, jobID) {
-  const job = await db.collection(JOBS).findOne({ jobID: jobID });
+async function getJob(db, jobID) {
+  const job = await db.collection(constants.JOBS).findOne({ jobID: jobID });
   return job;
 }
+
+module.exports = {
+  insertAlbum,
+  getAllAlbums,
+  getAlbum,
+  updateAlbumLabels,
+  insertUserAlbums,
+  getAllUserAlbums,
+  getUserAlbums,
+  deleteUserAlbums,
+  insertUserFriends,
+  getUserFriends,
+  deleteJob,
+  insertJob,
+  updateJob,
+  getJob,
+};

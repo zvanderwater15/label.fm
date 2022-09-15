@@ -1,0 +1,77 @@
+{
+    "topalbums": {
+        "album": [
+            {
+                "artist": {
+                    "url": "https://www.last.fm/music/The+1975",
+                    "name": "The 1975",
+                    "mbid": "5b6ebfe0-f72b-4902-bba9-74c8af0f1af0"
+                },
+                "image": [
+                    {
+                        "size": "small",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/34s/24612846aee1431ac36dee76af7cbc4f.png"
+                    },
+                    {
+                        "size": "medium",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/64s/24612846aee1431ac36dee76af7cbc4f.png"
+                    },
+                    {
+                        "size": "large",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/174s/24612846aee1431ac36dee76af7cbc4f.png"
+                    },
+                    {
+                        "size": "extralarge",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/24612846aee1431ac36dee76af7cbc4f.png"
+                    }
+                ],
+                "mbid": "0fffcdf3-309b-429a-b34b-f0cbcd71b174",
+                "url": "https://www.last.fm/music/The+1975/The+1975+(Deluxe+Version)",
+                "playcount": "1262",
+                "@attr": {
+                    "rank": "1"
+                },
+                "name": "The 1975 (Deluxe Version)"
+            },
+            {
+                "artist": {
+                    "url": "https://www.last.fm/music/The+1975",
+                    "name": "The 1975",
+                    "mbid": "5b6ebfe0-f72b-4902-bba9-74c8af0f1af0"
+                },
+                "image": [
+                    {
+                        "size": "small",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/34s/a32cb06bb22bc5d10654a5156fe78cf6.png"
+                    },
+                    {
+                        "size": "medium",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/64s/a32cb06bb22bc5d10654a5156fe78cf6.png"
+                    },
+                    {
+                        "size": "large",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/174s/a32cb06bb22bc5d10654a5156fe78cf6.png"
+                    },
+                    {
+                        "size": "extralarge",
+                        "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/a32cb06bb22bc5d10654a5156fe78cf6.png"
+                    }
+                ],
+                "mbid": "00dcdc68-80fd-4628-b3f2-c0b023e76898",
+                "url": "https://www.last.fm/music/The+1975/I+like+it+when+you+sleep,+for+you+are+so+beautiful+yet+so+unaware+of+it",
+                "playcount": "895",
+                "@attr": {
+                    "rank": "2"
+                },
+                "name": "I like it when you sleep, for you are so beautiful yet so unaware of it"
+            }
+        ],
+        "@attr": {
+            "user": "awewae",
+            "totalPages": "907",
+            "page": "1",
+            "perPage": "2",
+            "total": "1814"
+        }
+    }
+}

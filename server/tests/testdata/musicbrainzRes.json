@@ -1,0 +1,55 @@
+{
+    "country": "XW",
+    "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+    },
+    "disambiguation": "",
+    "quality": "normal",
+    "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+    "cover-art-archive": {
+        "darkened": false,
+        "count": 1,
+        "artwork": true,
+        "back": false,
+        "front": true
+    },
+    "label-info": [
+        {
+            "label": {
+                "disambiguation": "",
+                "id": "4835d7c5-d414-4d5a-b13f-735c64f64c78",
+                "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+                "type": "Imprint",
+                "label-code": null,
+                "name": "Perpetual Novice",
+                "sort-name": "Perpetual Novice"
+            },
+            "catalog-number": null
+        }
+    ],
+    "release-events": [
+        {
+            "date": "2019-10-18",
+            "area": {
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "sort-name": "[Worldwide]",
+                "name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                    "XW"
+                ],
+                "type-id": null,
+                "type": null
+            }
+        }
+    ],
+    "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+    "date": "2019-10-18",
+    "status": "Official",
+    "title": "Pang",
+    "packaging": "None",
+    "asin": null,
+    "barcode": "886447908150",
+    "id": "3913f9b2-8622-4b0b-aeb5-3511d2b103bc"
+}

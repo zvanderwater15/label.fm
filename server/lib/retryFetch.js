@@ -1,36 +1,31 @@
-import fetch from 'node-fetch';
+const fetch = require("node-fetch");
+const { NotFoundError, RateLimitedError, UnknownAPIError } = require("./errors");
+const RETRY_STATUS_CODES = [ 429, 502, 503, 504]
 
-// copied from - https://cheatcode.co/tutorials/how-to-add-automatic-retry-support-to-fetch-in-node-js
+function wait(delay) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
 
-let attempts = 0;
-
-const wait = (time = 0) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, time * 1000);
-  });
-};
-
-export const retryFetch = async (url = '', options = {}) => {
-  const { retry = true, retryDelay = 5, retries = 5, ...requestOptions } = options;
-
-  attempts += 1;
-
-  return fetch(url, requestOptions).then((response) => response).catch(async (error) => {
-    if (retry && attempts <= retries) {
-      console.warn({
-        message: `Request failed, retrying in ${retryDelay} seconds...`,
-        error: error?.message,
-      });
-
-      await wait(retryDelay);
-
-      return retryFetch(url, options, retry, retryDelay);
-    } else {
-      throw new Error(error);
+function retryFetch(url, delay = 5000, tries = 5, fetchOptions = {}) {
+  function onError(res) {
+    triesLeft = tries - 1;
+    if (!triesLeft || !RETRY_STATUS_CODES.includes(res.status)) {
+      // give up trying to fetch
+      return res;
     }
-  });
-};
+    return wait(delay).then(() =>
+      retryFetch(url, delay, triesLeft, fetchOptions)
+    );
+  }
 
-export default retryFetch;
+  return fetch(url, fetchOptions)
+    .then((res) => {
+      if (!res.ok) {
+        throw(res);
+      }
+      return res;
+    })
+    .catch(onError);
+}
+
+module.exports = retryFetch;

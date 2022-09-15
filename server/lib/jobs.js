@@ -1,11 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
-import {
-  PENDING,
-  insertJob,
-} from "./db/records";
+const { v4: uuidv4 } = require("uuid");
+const { PENDING, insertJob } = require("./db/records");
 
-export async function createJob(db, url) {
+async function createJob(db, url) {
   const jobId = uuidv4();
   await insertJob(db, jobId, url, PENDING);
-  return jobId
+  return jobId;
 }
+
+module.exports = { createJob };
