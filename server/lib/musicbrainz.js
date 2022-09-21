@@ -6,11 +6,11 @@ async function getLabels(mbid) {
   if (!release['label-info']) return []
   // get label names and remove duplicates
   const labels = [...new Set(release['label-info'].filter(labelInfo => labelInfo['label']).map(labelInfo => labelInfo['label']['name']))]
-  return labels
+  return {"title": release.title, "artist": release["artist-credit"][0].name, labels}
 }
 
 async function getRelease(mbid) {
-  const res = await retryFetch(`https://musicbrainz.org/ws/2/release/${mbid}?inc=labels`, delay=undefined, retry=undefined, {
+  const res = await retryFetch(`https://musicbrainz.org/ws/2/release/${mbid}?inc=labels+artists`, delay=undefined, retry=undefined, {
     headers: {
       'Accept': 'application/json',
       'User-Agent': 'Label.fm/0.9 ( zoe.van42@gmail.com )'

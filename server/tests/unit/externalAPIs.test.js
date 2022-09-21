@@ -33,9 +33,8 @@ describe("last.fm", () => {
     });
     fetch.mockImplementation(() => response);
     const friends = await getFriends(mbid);
-    expect(friends).toEqual({"users": ["fake_user", "Fake_user3"]});
+    expect(friends).toEqual({ users: ["fake_user", "Fake_user3"] });
   });
-
 
   test("user not found", async () => {
     const fakeUser = "awererwt";
@@ -68,7 +67,9 @@ describe("last.fm", () => {
     });
 
     fetch.mockImplementation(() => response);
-    await expect(getTopAlbums(fakeUser, limit, numTries)).rejects.toThrow("Too many requests - try again later");
+    await expect(getTopAlbums(fakeUser, limit, numTries)).rejects.toThrow(
+      "Too many requests - try again later"
+    );
     expect(fetch).toBeCalled();
     expect(fetch).toHaveBeenCalledTimes(numTries);
   }, 25000);
@@ -110,7 +111,7 @@ describe("musicbrainz", () => {
     const response = {
       ok: false,
       status: 503,
-      json: () => "Limit access to one request per second"
+      json: () => "Limit access to one request per second",
     };
 
     fetch.mockImplementation(() => Promise.resolve(response));
@@ -120,15 +121,18 @@ describe("musicbrainz", () => {
   }, 25000);
 
   test("get labels for album", async () => {
-    const mbid = musicbrainzRes.id;
+    const labelInfo = {
+      artist: "Caroline Polachek",
+      title: "Pang",
+      labels: ["Perpetual Novice"],
+    };
     const response = Promise.resolve({
       ok: true,
       status: 200,
       json: () => musicbrainzRes,
     });
     fetch.mockImplementation(() => response);
-    const labels = await getLabels(mbid);
-    expect(labels).toEqual(["Perpetual Novice"]);
+    const labels = await getLabels(musicbrainzRes.id);
+    expect(labels).toEqual(labelInfo);
   });
-
 });

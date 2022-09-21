@@ -20,10 +20,18 @@ const saveRecordLabelInformation = async (msg) => {
   const { jobID, albums } = JSON.parse(msg.content.toString());
   console.log("starting job " + jobID);
   for (let album of albums) {
-    console.log("processing " + album.title + " - " + album.mbid);
     try {
-      const labels = await getLabels(album.mbid);
-      await insertAlbum(db, album.mbid, album.artist, album.title, labels);
+      if (typeof(album) === "object") {
+        console.log("processing " + album.title + " - " + album.mbid);
+        const release = await getLabels(album.mbid);
+        await insertAlbum(db, album.mbid, album.artist, album.title, release.labels);  
+      } else {
+        // no album information, just mbid, so get album information from musicbrainz
+        const release = await getLabels(album);
+        console.log("processing " + release.title + " - " + album);
+        await insertAlbum(db, album, release.artist, release.title, release.labels);  
+        console.log(album, release.artist, release.title, release.labels)
+      }
     } catch (err) {
       if (err instanceof NotFoundError) {
         console.error(err.message);
