@@ -6,6 +6,7 @@ const { sendMessage } = require("../lib/queues.js");
 const { createJob } = require("../lib/jobs.js");
 const { NotFoundError } = require("../lib/errors.js");
 const fs = require("fs")
+const { ungzip } = require('node-gzip');
 
 async function lastfmUsers(db, startingUser, limit = 500) {
   const visitedUsers = [];
@@ -78,7 +79,9 @@ async function importFromSitemap(db, sitemap) {
   // read xml
   let data;
   try {
-    data = fs.readFileSync(sitemap, 'utf8')
+    data = fs.readFileSync(sitemap)
+    // sitemaps are gzipped
+    data = (await ungzip(data)).toString()
   } catch (err) {
     console.error("Invalid file")
     throw(err)
