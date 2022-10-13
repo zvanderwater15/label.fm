@@ -2,7 +2,7 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/UseWindowDimensions";
 import "./BarChart.css";
-const color = "#ff6b00";
+const color = "#f58d34";
 const fontSize = 16;
 
 const generateConfig = (
@@ -42,7 +42,7 @@ const generateConfig = (
             },
             callback: function (value) {
               const text = chartData[value].y;
-              let characterLimit = 21;
+              let characterLimit = 22;
               if (screenWidth <= 400) {
                 characterLimit = 14;
               }
@@ -263,7 +263,7 @@ function BarChart({ chartData, user }) {
         )
       );
     }
-  }, [chart, chartData, width]);
+  }, [chart, chartData, width, user]);
 
   useEffect(() => {
     if (chart2) {
